@@ -1,0 +1,13 @@
+{
+  "Id": "SolastaBarbarianClass",
+  "DisplayName": "SolastaBarbarianClass",
+  "Author": "Holic92",
+  "Version": "0.1.0",
+  "ManagerVersion": "0.23.4",
+  "Requirements": [ "SolastaModApi", "SolastaModHelpers" ],
+  "LoadAfter": [ "SolastaModApi", "SolastaModHelpers" ],
+  "AssemblyName": "SolastaBarbarianClass.dll",
+  "EntryMethod": "SolastaBarbarianClass.Main.Load",
+  "Repository": "https://github.com/Holic75/SolastaBarbarian",
+  "HomePage": ""
+}
