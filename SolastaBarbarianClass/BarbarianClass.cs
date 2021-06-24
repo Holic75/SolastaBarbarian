@@ -18,16 +18,19 @@ namespace SolastaBarbarianClass
         const string BarbarianClassNameGuid = "c7c54eb7-ddd0-430e-a7b3-74ff6594b7a4";
         const string BarbarianClassSubclassesGuid = "7f3de316-e5fc-491b-bf9d-a583ff81c2d2";
 
+        static Dictionary<int, int> rage_bonus_damage_level_map = new Dictionary<int, int> { { 2, 1 }, { 3, 9 }, { 4, 16 } };
+        static List<int> rage_uses_increase_levels = new List<int> { 3, 6, 12, 17 };
         static public NewFeatureDefinitions.ArmorClassStatBonus unarmored_defense;
-        static public NewFeatureDefinitions.PowerUsableOnlyInBattle rage_power; 
+        static public Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions> rage_powers = new Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions>();
+        static public NewFeatureDefinitions.PowerWithRestrictions reckless_attack_power;
+        static public FeatureDefinitionFeatureSet reckless_attack;
+        static public NewFeatureDefinitions.SavingthrowAffinityUnderRestriction danger_sense;
+        static public Dictionary<int, NewFeatureDefinitions.IncreaseNumberOfPowerUses> rage_power_extra_use = new Dictionary<int, NewFeatureDefinitions.IncreaseNumberOfPowerUses>();
+        static public FeatureDefinitionAttributeModifier extra_attack;
+        static public FeatureDefinitionMovementAffinity fast_movement;
+        static public FeatureDefinitionFeatureSet feral_instinct;
+        static public NewFeatureDefinitions.WeaponDamageDiceIncreaseOnCriticalHit brutal_critical;
         //Paths: Berserker, War shaman, frozen fury
-        //unarmored defense
-        //rage
-        //reckless attack
-        //danger sense
-        //fast movement
-        //danger sense
-        //feral instinct
         //brutal critical
 
         static public RuleDefinitions.DieType[] inspiration_dice = new RuleDefinitions.DieType[] { RuleDefinitions.DieType.D6, RuleDefinitions.DieType.D8, RuleDefinitions.DieType.D10, RuleDefinitions.DieType.D12 };
@@ -162,17 +165,37 @@ namespace SolastaBarbarianClass
 
             createUnarmoredDefense();
             createRage();
+            createRecklessAttack();
+            createDangerSense();
+            createFastMovement();
+            createExtraAttack();
+            createFeralInstinct();
+            createBrutalCritical();
             Definition.FeatureUnlocks.Clear();
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(saving_throws, 1));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(armor_proficiency, 1));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(weapon_proficiency, 1));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(skills, 1));
-            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_power, 1));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_powers[1], 1));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(unarmored_defense, 1));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(reckless_attack, 2));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(danger_sense, 2));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_power_extra_use[3], 3));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 4));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(extra_attack, 5));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(fast_movement, 5));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_power_extra_use[6], 6));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(feral_instinct, 7));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 8));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_powers[9], 9));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(brutal_critical, 9));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 12));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_power_extra_use[12], 12));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(brutal_critical, 13));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 16));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_powers[16], 16));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(rage_power_extra_use[17], 17));
+            Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(brutal_critical, 17));
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 19));
 
             var subclassChoicesGuiPresentation = new GuiPresentation();
@@ -182,73 +205,172 @@ namespace SolastaBarbarianClass
         }
 
 
-        static void createRage()
+        static void createBrutalCritical()
         {
-            string rage_title_string = "Feature/&BarbarianClassRagePowerTitle";
-            string rage_description_string = "Feature/&BarbarianClassRagePowerDescription";
-            string rage_condition_string = "Rules/&BarbarianClassRageCondition";
+            string brutal_critical_title_string = "Feature/&BarbarianClassBrutalCriticalTitle";
+            string brutal_critical_description_string = "Feature/&BarbarianClassBrutalCriticalDescription";
+
+            brutal_critical = Helpers.FeatureBuilder<NewFeatureDefinitions.WeaponDamageDiceIncreaseOnCriticalHit>.createFeature("BarbarianClassBrutalCritical",
+                                                                                                                                "",
+                                                                                                                                brutal_critical_title_string,
+                                                                                                                                brutal_critical_description_string,
+                                                                                                                                null,
+                                                                                                                                b =>
+                                                                                                                                {
+                                                                                                                                    b.applyToMelee = true;
+                                                                                                                                    b.applyToRanged = false;
+                                                                                                                                    b.value = 1;
+                                                                                                                                }
+                                                                                                                               );
+        }
 
 
-            var condition_can_continue_rage = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassCanContinueRageCondition",
+        static void createFeralInstinct()
+        {
+            string feral_instinct_title_string = "Feature/&BarbarianClassFeralInstinctTitle";
+            string feral_instinct_description_string = "Feature/&BarbarianClassFeralInstinctDescription";
+            var cannot_be_surprised = Helpers.FeatureBuilder<FeatureDefinitionPerceptionAffinity>.createFeature("BarbarainClassCanNotBeSurprised",
+                                                                                                                "",
+                                                                                                                Common.common_no_title,
+                                                                                                                Common.common_no_title,
+                                                                                                                null,
+                                                                                                                c =>
+                                                                                                                {
+                                                                                                                    c.SetCannotBeSurprised(true);
+                                                                                                                }
+                                                                                                                );
+            feral_instinct = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianClassFeralInstinct",
+                                                                        "",
+                                                                        feral_instinct_title_string,
+                                                                        feral_instinct_description_string,
+                                                                        false,
+                                                                        FeatureDefinitionFeatureSet.FeatureSetMode.Union,
+                                                                        false,
+                                                                        cannot_be_surprised,
+                                                                        DatabaseHelper.FeatureDefinitionCombatAffinitys.CombatAffinityEagerForBattle
+                                                                        );
+        }
+
+        static void createExtraAttack()
+        {
+            extra_attack = Helpers.CopyFeatureBuilder<FeatureDefinitionAttributeModifier>.createFeatureCopy("BarbarianClassExtraAttack",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            "",
+                                                                                                            null,
+                                                                                                            DatabaseHelper.FeatureDefinitionAttributeModifiers.AttributeModifierFighterExtraAttack
+                                                                                                            );
+        }
+
+
+        static void createFastMovement()
+        {
+            string fast_movement_title_string = "Feature/&BarbarianClassFastMovementTitle";
+            string fast_movement_description_string = "Feature/&BarbarianClassFastMovementDescription";
+
+            fast_movement = Helpers.CopyFeatureBuilder<FeatureDefinitionMovementAffinity>.createFeatureCopy("BarbarianClassFastMovement",
+                                                                                                            "",
+                                                                                                            fast_movement_title_string,
+                                                                                                            fast_movement_description_string,
+                                                                                                            null,
+                                                                                                            DatabaseHelper.FeatureDefinitionMovementAffinitys.MovementAffinityLongstrider
+                                                                                                            );
+        }
+
+        static void createDangerSense()
+        {
+            string danger_sense_title_string = "Feature/&BarbarianClassDangerSenseTitle";
+            string danger_sense_description_string = "Feature/&BarbarianClassDangerSenseDescription";
+
+            danger_sense = Helpers.FeatureBuilder<NewFeatureDefinitions.SavingthrowAffinityUnderRestriction>.createFeature("BarbarianClassDangerSenseFeature",
+                                                                                                                            "",
+                                                                                                                            danger_sense_title_string,
+                                                                                                                            danger_sense_description_string,
+                                                                                                                            Common.common_no_icon,
+                                                                                                                            d =>
+                                                                                                                            {
+                                                                                                                                d.affinityGroups = new List<SavingThrowAffinityGroup>
+                                                                                                                                {
+                                                                                                                                    new SavingThrowAffinityGroup()
+                                                                                                                                    {
+                                                                                                                                        abilityScoreName = Helpers.Stats.Dexterity,
+                                                                                                                                        affinity = RuleDefinitions.CharacterSavingThrowAffinity.Advantage,
+                                                                                                                                    }
+                                                                                                                                };
+                                                                                                                                d.restrictions = new List<NewFeatureDefinitions.IRestriction>
+                                                                                                                                {
+                                                                                                                                    new NewFeatureDefinitions.NoConditionRestriction(DatabaseHelper.ConditionDefinitions.ConditionIncapacitated),
+                                                                                                                                    new NewFeatureDefinitions.NoConditionRestriction(DatabaseHelper.ConditionDefinitions.ConditionBlinded),
+                                                                                                                                    new NewFeatureDefinitions.NoConditionRestriction(DatabaseHelper.ConditionDefinitions.ConditionDeafened)
+                                                                                                                                };
+                                                                                                                            }
+                                                                                                                            );
+        }
+
+
+        static void createRecklessAttack()
+        {
+            string reckless_attack_title_string = "Feature/&BarbarianClassRecklessAttackPowerTitle";
+            string reckless_attack_description_string = "Feature/&BarbarianClassRecklessAttackPowerDescription";
+            string reckless_attack_condition_string = "Rules/&BarbarianClassRecklessAttackCondition";
+
+            var condition_attacked_this_turn = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassAttackedThisTurnCondition",
+                                                                                                         "",
+                                                                                                         Common.common_no_title,
+                                                                                                         Common.common_no_title,
+                                                                                                         Common.common_no_icon,
+                                                                                                         DatabaseHelper.ConditionDefinitions.ConditionHeroism,
+                                                                                                         new RuleDefinitions.ConditionInterruption[] { }
+                                                                                                        );
+            condition_attacked_this_turn.SetSilentWhenAdded(true);
+            condition_attacked_this_turn.SetSilentWhenRemoved(true);
+
+
+            var effect_feature = Helpers.FeatureBuilder<NewFeatureDefinitions.RecklessAttack>.createFeature("BarbarianClassRecklessAttackEffectFeature",
+                                                                                                            "",
+                                                                                                            reckless_attack_title_string,
+                                                                                                            reckless_attack_description_string,
+                                                                                                            Common.common_no_icon,
+                                                                                                            d =>
+                                                                                                            {
+                                                                                                                d.attackStat = Helpers.Stats.Strength;
+                                                                                                            }
+                                                                                                            );
+
+            var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassRecklessAttackCondition",
                                                                                       "",
-                                                                                      Common.common_no_title,
-                                                                                      Common.common_no_title,
-                                                                                      Common.common_no_icon,
-                                                                                      DatabaseHelper.ConditionDefinitions.ConditionHeroism,
-                                                                                      new RuleDefinitions.ConditionInterruption[] { }
-                                                                                      );
-            condition_can_continue_rage.SetSilentWhenAdded(true);
-            condition_can_continue_rage.SetSilentWhenRemoved(true);
-
-            var damage_bonus = Helpers.CopyFeatureBuilder<FeatureDefinitionAdditionalDamage>.createFeatureCopy("BarbarianClassRageDamageBonus",
-                                                                                                               "",
-                                                                                                               Common.common_no_title,
-                                                                                                               Common.common_no_title,
-                                                                                                               null,
-                                                                                                               DatabaseHelper.FeatureDefinitionAdditionalDamages.AdditionalDamageBracersOfArchery,
-                                                                                                               d =>
-                                                                                                               {
-                                                                                                                   d.SetRequiredProperty(RuleDefinitions.AdditionalDamageRequiredProperty.MeleeWeapon);
-                                                                                                                   d.SetDamageDieType(RuleDefinitions.DieType.D1);
-                                                                                                                   d.SetDamageDiceNumber(2);
-                                                                                                                   d.SetNotificationTag("Enraged");
-                                                                                                               }
-                                                                                                               );
-
-            var rage_condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassRageCondition",
-                                                                                      "",
-                                                                                      rage_condition_string,
-                                                                                      rage_description_string,
+                                                                                      reckless_attack_title_string,
+                                                                                      reckless_attack_description_string,
                                                                                       null,
-                                                                                      DatabaseHelper.ConditionDefinitions.ConditionHeroism,
-                                                                                      new RuleDefinitions.ConditionInterruption[] {},
-                                                                                      DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance,
-                                                                                      DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityPiercingResistance,
-                                                                                      DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinitySlashingResistance,
-                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityConditionBullsStrength,
-                                                                                      damage_bonus
+                                                                                      DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
+                                                                                      new RuleDefinitions.ConditionInterruption[] { },
+                                                                                      effect_feature
                                                                                       );
+            condition.SetTurnOccurence(RuleDefinitions.TurnOccurenceType.StartOfTurn);
+            condition.SetConditionType(RuleDefinitions.ConditionType.Neutral);
+            //condition.SetSpecialDuration(true);
+            // condition.SetDurationParameter(1);
+            // condition.SetDurationParameterDie(RuleDefinitions.DieType.D1);
+            //  condition.SetDurationType(RuleDefinitions.DurationType.Round);
 
-            var rage_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.RageWatcher>.createFeature("BarbarianClassRageAttackWatcher",
-                                                                                           "",
-                                                                                           Common.common_no_title,
-                                                                                           Common.common_no_title,
-                                                                                           null,
-                                                                                           r =>
-                                                                                           {
-                                                                                               r.requiredCondition = condition_can_continue_rage;
-                                                                                               r.conditionToRemove = rage_condition;
-                                                                                           }
-                                                                                           );
-
-            rage_condition.Features.Add(rage_watcher);
+            var reckless_attack_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.ApplyConditionOnAttackToAttackerUnitUntilTurnStart>.createFeature("BarbarianClassAttackedMark",
+                                                                                                       "",
+                                                                                                       Common.common_no_title,
+                                                                                                       Common.common_no_title,
+                                                                                                       null,
+                                                                                                       r =>
+                                                                                                       {
+                                                                                                           r.condition = condition_attacked_this_turn;
+                                                                                                           r.extraConditionsToRemove = new List<ConditionDefinition>() { condition };
+                                                                                                       }
+                                                                                                       );
 
             var effect = new EffectDescription();
-            effect.Copy(DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.EffectDescription);
+            effect.Copy(DatabaseHelper.SpellDefinitions.Heroism.EffectDescription);
             effect.SetRangeType(RuleDefinitions.RangeType.Self);
             effect.SetRangeParameter(1);
             effect.DurationParameter = 1;
-            effect.DurationType = RuleDefinitions.DurationType.Minute;
+            effect.DurationType = RuleDefinitions.DurationType.Round;
             effect.EffectForms.Clear();
             effect.SetTargetType(RuleDefinitions.TargetType.Self);
 
@@ -256,23 +378,166 @@ namespace SolastaBarbarianClass
             effect_form.ConditionForm = new ConditionForm();
             effect_form.FormType = EffectForm.EffectFormType.Condition;
             effect_form.ConditionForm.Operation = ConditionForm.ConditionOperation.Add;
-            effect_form.ConditionForm.ConditionDefinition = rage_condition;
+            effect_form.ConditionForm.ConditionDefinition = condition;
             effect.EffectForms.Add(effect_form);
 
-            rage_power = Helpers.GenericPowerBuilder<NewFeatureDefinitions.PowerUsableOnlyInBattle>
-                                                      .createPower("BarbarianClassRagePower",
+            reckless_attack_power = Helpers.GenericPowerBuilder<NewFeatureDefinitions.PowerWithRestrictions>
+                                                      .createPower("BarbarianClassRecklessAttackPower",
                                                          "",
-                                                         rage_title_string,
-                                                         rage_description_string,
-                                                         DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.GuiPresentation.SpriteReference,
+                                                         reckless_attack_title_string,
+                                                         reckless_attack_description_string,
+                                                         DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDivineWrath.GuiPresentation.SpriteReference,
                                                          effect,
-                                                         RuleDefinitions.ActivationTime.BonusAction,
-                                                         2,
+                                                         RuleDefinitions.ActivationTime.NoCost,
+                                                         1,
                                                          RuleDefinitions.UsesDetermination.Fixed,
-                                                         RuleDefinitions.RechargeRate.LongRest
+                                                         RuleDefinitions.RechargeRate.AtWill
                                                          );
+            reckless_attack_power.restrictions = new List<NewFeatureDefinitions.IRestriction>()
+            {
+                new NewFeatureDefinitions.InBattleRestriction(),
+                new NewFeatureDefinitions.NoConditionRestriction(condition),
+                new NewFeatureDefinitions.NoConditionRestriction(condition_attacked_this_turn)
+            };
 
-            rage_power.SetShortTitleOverride(rage_title_string);
+            reckless_attack_power.SetShortTitleOverride(reckless_attack_title_string);
+            reckless_attack = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianClassRecklessAttackFeatureSet",
+                                                                         "",
+                                                                         reckless_attack_title_string,
+                                                                         reckless_attack_description_string,
+                                                                         false,
+                                                                         FeatureDefinitionFeatureSet.FeatureSetMode.Union,
+                                                                         false,
+                                                                         reckless_attack_power,
+                                                                         reckless_attack_watcher
+                                                                         );
+        }
+
+        static void createRage()
+        {
+            string rage_title_string = "Feature/&BarbarianClassRagePowerTitle";
+            string rage_description_string = "Feature/&BarbarianClassRagePowerDescription";
+            string rage_condition_string = "Rules/&BarbarianClassRageCondition";
+
+            var condition_can_continue_rage = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassCanContinueRageCondition",
+                                                                                                          "",
+                                                                                                          "Rules/&BarbarianClassCanContinueRageCondition",
+                                                                                                          Common.common_no_title,
+                                                                                                          Common.common_no_icon,
+                                                                                                          DatabaseHelper.ConditionDefinitions.ConditionHeroism,
+                                                                                                          new RuleDefinitions.ConditionInterruption[] { }
+                                                                                                          );
+            condition_can_continue_rage.SetSilentWhenAdded(true);
+            condition_can_continue_rage.SetSilentWhenRemoved(true);
+
+            NewFeatureDefinitions.PowerWithRestrictions previous_power = null;
+
+            foreach (var kv in rage_bonus_damage_level_map)
+            {
+                var damage_bonus = Helpers.FeatureBuilder<NewFeatureDefinitions.WeaponDamageBonusWithSpecificStat>.createFeature("BarbarianClassRageDamageBonus" + kv.Value.ToString(),
+                                                                                                                   "",
+                                                                                                                   rage_condition_string,
+                                                                                                                   rage_condition_string,
+                                                                                                                   null,
+                                                                                                                   d =>
+                                                                                                                   {
+                                                                                                                       d.value = kv.Key;
+                                                                                                                       d.attackStat = Helpers.Stats.Strength;
+                                                                                                                   }
+                                                                                                                   );
+
+                var rage_condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassRageCondition" + kv.Value.ToString(),
+                                                                                          "",
+                                                                                          rage_condition_string,
+                                                                                          rage_description_string,
+                                                                                          null,
+                                                                                          DatabaseHelper.ConditionDefinitions.ConditionHeroism,
+                                                                                          new RuleDefinitions.ConditionInterruption[] { },
+                                                                                          DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance,
+                                                                                          DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityPiercingResistance,
+                                                                                          DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinitySlashingResistance,
+                                                                                          DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityConditionBullsStrength,
+                                                                                          damage_bonus
+                                                                                          );
+
+                var rage_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.RageWatcher>.createFeature("BarbarianClassRageAttackWatcher" + kv.Value.ToString(),
+                                                                                               "",
+                                                                                               Common.common_no_title,
+                                                                                               Common.common_no_title,
+                                                                                               null,
+                                                                                               r =>
+                                                                                               {
+                                                                                                   r.requiredCondition = condition_can_continue_rage;
+                                                                                                   r.conditionToRemove = rage_condition;
+                                                                                               }
+                                                                                               );
+
+                rage_condition.Features.Add(rage_watcher);
+
+                var effect = new EffectDescription();
+                effect.Copy(DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.EffectDescription);
+                effect.SetRangeType(RuleDefinitions.RangeType.Self);
+                effect.SetRangeParameter(1);
+                effect.DurationParameter = 1;
+                effect.DurationType = RuleDefinitions.DurationType.Minute;
+                effect.EffectForms.Clear();
+                effect.SetTargetType(RuleDefinitions.TargetType.Self);
+
+                var effect_form = new EffectForm();
+                effect_form.ConditionForm = new ConditionForm();
+                effect_form.FormType = EffectForm.EffectFormType.Condition;
+                effect_form.ConditionForm.Operation = ConditionForm.ConditionOperation.Add;
+                effect_form.ConditionForm.ConditionDefinition = rage_condition;
+                effect.EffectForms.Add(effect_form);
+
+                var rage_power = Helpers.GenericPowerBuilder<NewFeatureDefinitions.PowerWithRestrictions>
+                                                          .createPower("BarbarianClassRagePower" + kv.Value.ToString(),
+                                                             "",
+                                                             Helpers.StringProcessing.appendToString(rage_title_string,
+                                                                                                             rage_title_string + kv.Value.ToString(),
+                                                                                                             $" (+{kv.Key})"),
+                                                             rage_description_string,
+                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.GuiPresentation.SpriteReference,
+                                                             effect,
+                                                             RuleDefinitions.ActivationTime.BonusAction,
+                                                             2 + rage_uses_increase_levels.Count(l => l < kv.Value),
+                                                             RuleDefinitions.UsesDetermination.Fixed,
+                                                             RuleDefinitions.RechargeRate.LongRest
+                                                             );
+                rage_power.restrictions = new List<NewFeatureDefinitions.IRestriction>()
+                {
+                    new NewFeatureDefinitions.InBattleRestriction(),
+                    new NewFeatureDefinitions.NoConditionRestriction(condition_can_continue_rage)
+                };
+
+                rage_power.SetShortTitleOverride(rage_title_string);
+                if (previous_power != null)
+                {
+                    rage_power.SetOverriddenPower(previous_power);
+                }
+                previous_power = rage_power;
+                rage_powers.Add(kv.Value, rage_power);
+            }
+
+            string rage_extra_use_title_string = "Feature/&BarbarianClassRageExtraUseTitle";
+            string rage_extra_use_description_string = "Feature/&BarbarianClassRageExtraUseDescription";
+
+            foreach (var l in rage_uses_increase_levels)
+            {
+                var feature = Helpers.FeatureBuilder<NewFeatureDefinitions.IncreaseNumberOfPowerUses>.createFeature("BarbarianClassExtraRage" + l.ToString(),
+                                                                                                                    "",
+                                                                                                                    rage_extra_use_title_string,
+                                                                                                                    rage_extra_use_description_string,
+                                                                                                                    null,
+                                                                                                                    f =>
+                                                                                                                    {
+                                                                                                                        f.value = 1;
+                                                                                                                        f.powers = rage_powers.Where(kv => kv.Key < l).Select(kv => kv.Value)
+                                                                                                                                        .Cast<FeatureDefinitionPower>().ToList();
+                                                                                                                    }
+                                                                                                                    );
+                rage_power_extra_use.Add(l, feature);
+            }
         }
 
 
