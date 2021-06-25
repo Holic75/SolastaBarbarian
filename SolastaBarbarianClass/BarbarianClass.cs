@@ -30,38 +30,14 @@ namespace SolastaBarbarianClass
         static public FeatureDefinitionMovementAffinity fast_movement;
         static public FeatureDefinitionFeatureSet feral_instinct;
         static public NewFeatureDefinitions.WeaponDamageDiceIncreaseOnCriticalHit brutal_critical;
-        //Paths: Berserker, War shaman, frozen fury
-        //brutal critical
-
-        static public RuleDefinitions.DieType[] inspiration_dice = new RuleDefinitions.DieType[] { RuleDefinitions.DieType.D6, RuleDefinitions.DieType.D8, RuleDefinitions.DieType.D10, RuleDefinitions.DieType.D12 };
+        static NewFeatureDefinitions.ApplyPowerOnTurnEndBasedOnClassLevel frozen_fury_rage_feature;
+        static public FeatureDefinition frozen_fury;
+        static public NewFeatureDefinitions.ArmorBonusAgainstAttackType frigid_body;
+        static public FeatureDefinitionFeatureSet numb;
+     
         static public CharacterClassDefinition barbarian_class;
-        static public Dictionary<RuleDefinitions.DieType, FeatureDefinitionPower> inspiration_powers = new Dictionary<RuleDefinitions.DieType, FeatureDefinitionPower>();
-        static public FeatureDefinition font_of_inspiration;
-        static public FeatureDefinitionPointPool expertise;
-        static public FeatureDefinitionAbilityCheckAffinity jack_of_all_trades;
-        static public Dictionary<RuleDefinitions.DieType, NewFeatureDefinitions.FeatureDefinitionExtraHealingDieOnShortRest> song_of_rest = new Dictionary<RuleDefinitions.DieType, NewFeatureDefinitions.FeatureDefinitionExtraHealingDieOnShortRest>();
-        static public SpellListDefinition Barbarian_spelllist;
-        static public SpellListDefinition magical_secrets_spelllist;
-        static public NewFeatureDefinitions.FeatureDefinitionExtraSpellSelection magical_secrets;
-        static public NewFeatureDefinitions.FeatureDefinitionExtraSpellSelection magical_secrets14;
-        static public NewFeatureDefinitions.FeatureDefinitionExtraSpellSelection magical_secrets18;
-        static public FeatureDefinitionPower countercharm;
+        //More Paths: Berserker, War shaman,
 
-        static public Dictionary<RuleDefinitions.DieType, FeatureDefinitionFeatureSet> cutting_words = new Dictionary<RuleDefinitions.DieType, FeatureDefinitionFeatureSet>();
-
-        static public FeatureDefinitionPointPool lore_college_bonus_proficiencies;
-        static public NewFeatureDefinitions.FeatureDefinitionExtraSpellSelection additional_magical_secrets;
-
-        static public FeatureDefinitionFeatureSet virtue_college_bonus_proficiencies;
-        static public Dictionary<RuleDefinitions.DieType, NewFeatureDefinitions.FeatureDefinitionReactionPowerOnAttackAttempt> music_of_spheres
-            = new Dictionary<RuleDefinitions.DieType, NewFeatureDefinitions.FeatureDefinitionReactionPowerOnAttackAttempt>();
-        static public FeatureDefinitionAttributeModifier virtue_college_extra_attack;
-
-
-        static public FeatureDefinitionFeatureSet nature_college_bonus_proficiencies;
-        static public FeatureDefinitionFeatureSet nature_college_extra_cantrip;
-        static public FeatureDefinitionFeatureSet natural_focus;
-        static public FeatureDefinition environmental_magical_secrets;
 
         protected BarbarianClassBuilder(string name, string guid) : base(name, guid)
         {
@@ -161,8 +137,6 @@ namespace SolastaBarbarianClass
                                                                     Helpers.Skills.AnimalHandling, Helpers.Skills.Athletics, Helpers.Skills.Intimidation, 
                                                                     Helpers.Skills.Nature, Helpers.Skills.Perception, Helpers.Skills.Survival
                                                                     );
-
-
             createUnarmoredDefense();
             createRage();
             createRecklessAttack();
@@ -199,9 +173,9 @@ namespace SolastaBarbarianClass
             Definition.FeatureUnlocks.Add(new FeatureUnlockByLevel(DatabaseHelper.FeatureDefinitionFeatureSets.FeatureSetAbilityScoreChoice, 19));
 
             var subclassChoicesGuiPresentation = new GuiPresentation();
-            subclassChoicesGuiPresentation.Title = "Subclass/&BarbarianSubclassCollegeTitle";
-            subclassChoicesGuiPresentation.Description = "Subclass/&BarbarianSubclassCollegeDescription";
-            BarbarianFeatureDefinitionSubclassChoice = this.BuildSubclassChoice(3, "College", false, "SubclassChoiceBarbarianSpecialistArchetypes", subclassChoicesGuiPresentation, BarbarianClassSubclassesGuid);
+            subclassChoicesGuiPresentation.Title = "Subclass/&BarbarianSubclassPrimalPathTitle";
+            subclassChoicesGuiPresentation.Description = "Subclass/&BarbarianSubclassPrimalPathDescription";
+            BarbarianFeatureDefinitionSubclassChoice = this.BuildSubclassChoice(3, "PrimalPath", false, "SubclassChoiceBarbarianSpecialistArchetypes", subclassChoicesGuiPresentation, BarbarianClassSubclassesGuid);
         }
 
 
@@ -563,165 +537,191 @@ namespace SolastaBarbarianClass
         }
 
 
-        static CharacterSubclassDefinition createNatureCollege()
+        static CharacterSubclassDefinition createPathOfFrozenFury()
         {
-            createNatureCollegeBonusProficienies();
-            createNatureCollegeExtraCantrip();
-
-
+            createFrozenFury();
+            createFrigidBody();
+            createNumb();
 
             var gui_presentation = new GuiPresentationBuilder(
-                    "Subclass/&BarbarianSubclassCollegeOfNatureDescription",
-                    "Subclass/&BarbarianSubclassCollegeOfNatureTitle")
-                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.TraditionGreenmage.GuiPresentation.SpriteReference)
+                    "Subclass/&BarbarianSubclassPrimalPathOfFrozenFuryDescription",
+                    "Subclass/&BarbarianSubclassPrimalPathOfFrozenFuryTitle")
+                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.DomainElementalCold.GuiPresentation.SpriteReference)
                     .Build();
 
-            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassCollegeOfNature", "58a3447b-a154-4da2-9a56-fb38d5e6c0b4")
-                                                                                            .SetGuiPresentation(gui_presentation)
-                                                                                            .AddFeatureAtLevel(nature_college_bonus_proficiencies, 3)
-                                                                                            .AddFeatureAtLevel(nature_college_extra_cantrip, 3)
-                                                                                            .AddToDB();
+            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassPrimalPathOfFrozenFury", "facf5253-aa04-40b1-89a6-2e09f812da5a")
+                    .SetGuiPresentation(gui_presentation)
+                    .AddFeatureAtLevel(frozen_fury, 3)
+                    .AddFeatureAtLevel(frigid_body, 6)
+                    .AddFeatureAtLevel(numb, 10)
+                    .AddToDB();
 
+            frozen_fury_rage_feature.requiredSubclass = definition;
             return definition;
         }
 
 
-        static void createNatureCollegeExtraCantrip()
+        static void createNumb()
         {
-            string title = "Feature/&BarbarianNatureSubclassBonusCantripTitle";
-            string description = "Feature/&BarbarianNatureSubclassBonusCantripDescription";
+            string numb_title_string = "Feature/&BarbarianSubclassFrozenFuryNumbTitle";
+            string numb_description_string = "Feature/&BarbarianSubclassFrozenFuryNumbDescription";
 
-            var cantrips = new SpellDefinition[] { DatabaseHelper.SpellDefinitions.Guidance, DatabaseHelper.SpellDefinitions.PoisonSpray, DatabaseHelper.SpellDefinitions.Resistance };
+            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionPoisoned, DatabaseHelper.ConditionDefinitions.ConditionFrightened };
+            var numb_immunity = Helpers.FeatureBuilder<NewFeatureDefinitions.ImmunityToCondtionIfHasSpecificConditions>.createFeature("BarbarianSubclassFrozenFuryNumbImmunity",
+                                                                                                                          "",
+                                                                                                                          numb_title_string,
+                                                                                                                          numb_description_string,
+                                                                                                                          null,
+                                                                                                                          f =>
+                                                                                                                          {
+                                                                                                                              f.immuneCondtions = conditons;
+                                                                                                                              f.requiredConditions = new List<ConditionDefinition>();
+                                                                                                                          }
+                                                                                                                          );
 
-            List<FeatureDefinition> learn_features = new List<FeatureDefinition>();
+            var numb_removal = Helpers.FeatureBuilder<NewFeatureDefinitions.RemoveConditionsOnConditionApplication>.createFeature("BarbarianSubclassFrozenFuryNumbRemoval",
+                                                                                                              "",
+                                                                                                              numb_title_string,
+                                                                                                              numb_description_string,
+                                                                                                              null,
+                                                                                                              f =>
+                                                                                                              {
+                                                                                                                  f.removeConditions = conditons;
+                                                                                                                  f.appliedConditions = new List<ConditionDefinition>();
+                                                                                                              }
+                                                                                                              );
 
-            foreach (var c in cantrips)
+            foreach (var rp in rage_powers)
             {
-                var feature = Helpers.BonusCantripsBuilder.createLearnBonusCantrip(c.name + "BarbarianNatureSubclassBonusCantrip",
-                                                                                   "",
-                                                                                   c.GuiPresentation.Title,
-                                                                                   c.GuiPresentation.Description,
-                                                                                   c);
-                learn_features.Add(feature);
+                numb_immunity.requiredConditions.Add(rp.Value.EffectDescription.EffectForms[0].ConditionForm.ConditionDefinition);
+                numb_removal.appliedConditions.Add(rp.Value.EffectDescription.EffectForms[0].ConditionForm.ConditionDefinition);
             }
 
-            nature_college_extra_cantrip = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianNatureSubclassBonusCantrip",
-                                                                                "",
-                                                                                title,
-                                                                                description,
-                                                                                false,
-                                                                                FeatureDefinitionFeatureSet.FeatureSetMode.Exclusion,
-                                                                                false,
-                                                                                learn_features.ToArray()
-                                                                                );
-        }
 
-
-        static void createNatureCollegeBonusProficienies()
-        {
-            var tools_proficiency = Helpers.ProficiencyBuilder.CreateToolsProficiency("BarbarianNatureSubclassToolsProficiency",
-                                                                                      "",
-                                                                                      Common.common_no_title,
-                                                                                      Helpers.Tools.HerbalismKit
-                                                                                      );
-
-            var skills = Helpers.PoolBuilder.createSkillProficiency("BarbarianNatureSubclassSkillsProficiency",
-                                                                    "",
-                                                                    Common.common_no_title,
-                                                                    Common.common_no_title,
-                                                                    2,
-                                                                    Helpers.Skills.Nature, Helpers.Skills.Medicine, Helpers.Skills.AnimalHandling, Helpers.Skills.Survival);
-
-            nature_college_bonus_proficiencies = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianNatureSubclassBonusProficiencies",
-                                                                                            "",
-                                                                                            "Feature/&BarbarianNatureSubclassBonusProficiencieslTitle",
-                                                                                            "Feature/&BarbarianNatureSubclassBonusProficiencieslDescription",
-                                                                                            false,
-                                                                                            FeatureDefinitionFeatureSet.FeatureSetMode.Union,
-                                                                                            false,
-                                                                                            skills,
-                                                                                            tools_proficiency
-                                                                                            );
-        }
-
-
-        static CharacterSubclassDefinition createVirtueCollege()
-        {
-            createVirtueCollegeProficiencies();
-
-            var gui_presentation = new GuiPresentationBuilder(
-                    "Subclass/&BarbarianSubclassCollegeOfVirtueDescription",
-                    "Subclass/&BarbarianSubclassCollegeOfVirtueTitle")
-                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.OathOfTirmar.GuiPresentation.SpriteReference)
-                    .Build();
-
-            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassCollegeOfVirtue", "278c2e79-d301-4c35-974f-0ee51e7d4eb3")
-                    .SetGuiPresentation(gui_presentation)
-                    .AddFeatureAtLevel(virtue_college_bonus_proficiencies, 3)
-                    .AddToDB();
-
-            return definition;
-        }
-
-
-        static void createVirtueCollegeProficiencies()
-        {
-            var armor_proficiency = Helpers.ProficiencyBuilder.CreateArmorProficiency("BarbarianVirtueSubclassArmorProficiency",
+            numb = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianSubclassFrozenFuryNumb",
                                                               "",
-                                                              Common.common_no_title,
-                                                              Common.common_no_title,
-                                                              Helpers.ArmorProficiencies.MediumArmor,
-                                                              Helpers.ArmorProficiencies.Shield
+                                                              numb_title_string,
+                                                              numb_description_string,
+                                                              false,
+                                                              FeatureDefinitionFeatureSet.FeatureSetMode.Union,
+                                                              false,
+                                                              numb_immunity,
+                                                              numb_removal
                                                               );
-
-            var wis_proficiency = Helpers.ProficiencyBuilder.CreateSavingthrowProficiency("BarbarianVirtueSubclassWisSavingthrowsProficiency",
-                                                                                          "",
-                                                                                          Helpers.Stats.Wisdom
-                                                                                          );
-
-            virtue_college_bonus_proficiencies = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianVirtueSubclassBonusProficiency",
-                                                                                            "",
-                                                                                            "Feature/&BarbarianVirtueSublclassBonusProficiencieslTitle",
-                                                                                            "Feature/&BarbarianVirtueSublclassBonusProficiencieslDescription",
-                                                                                            false,
-                                                                                            FeatureDefinitionFeatureSet.FeatureSetMode.Union,
-                                                                                            false,
-                                                                                            armor_proficiency,
-                                                                                            wis_proficiency
-                                                                                            );
-
         }
 
 
-
-        static CharacterSubclassDefinition createLoreCollege()
+        static void createFrigidBody()
         {
-            createLoreCollegeBonusProficiencies();
+            string frigid_body_title_string = "Feature/&BarbarianSubclassFrozenFuryFrigidBodyTitle";
+            string frigid_body_description_string = "Feature/&BarbarianSubclassFrozenFuryFrigidBodyDescription";
 
-            var gui_presentation = new GuiPresentationBuilder(
-                    "Subclass/&BarbarianSubclassCollegeOfLoreDescription",
-                    "Subclass/&BarbarianSubclassCollegeOfLoreTitle")
-                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.TraditionLoremaster.GuiPresentation.SpriteReference)
-                    .Build();
-
-            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassCollegeOfLore", "a6ba03a4-2bbf-488c-97c0-d42d43c8afe3")
-                    .SetGuiPresentation(gui_presentation)
-                    .AddFeatureAtLevel(lore_college_bonus_proficiencies, 3)
-                    .AddToDB();
-
-            return definition;
+            frigid_body = Helpers.FeatureBuilder<NewFeatureDefinitions.ArmorBonusAgainstAttackType>.createFeature("BarbarianSubclassFrozenFuryFrigidBody",
+                                                                                                                  "",
+                                                                                                                  frigid_body_title_string,
+                                                                                                                  frigid_body_description_string,
+                                                                                                                  null,
+                                                                                                                  f =>
+                                                                                                                  {
+                                                                                                                      f.applyToMelee = false;
+                                                                                                                      f.applyToRanged = true;
+                                                                                                                      f.requiredConditions = new List<ConditionDefinition>();
+                                                                                                                      f.value = 2;
+                                                                                                                  }
+                                                                                                                  );
+            foreach (var rp in rage_powers)
+            {
+                frigid_body.requiredConditions.Add(rp.Value.EffectDescription.EffectForms[0].ConditionForm.ConditionDefinition);
+            }
+                                                                
         }
 
 
-        static void createLoreCollegeBonusProficiencies()
+        static void createFrozenFury()
         {
-            lore_college_bonus_proficiencies = Helpers.PoolBuilder.createSkillProficiency("BarbarianLoreSubclassSkillProficiency",
-                                                        "",
-                                                        "Feature/&BarbarianLoreSublclassExtraSkillPointPoolTitle",
-                                                        "Feature/&BarbarianLoreSublclassExtraSkillPointPoolDescription",
-                                                        3,
-                                                        Helpers.Skills.getAllSkills());
+            string winters_fury_title_string = "Feature/&BarbarianSubclassFrozenFuryWintersFuryTitle";
+            string winters_fury_description_string = "Feature/&BarbarianSubclassFrozenFuryWintersFuryDescription";
+
+            List<(int level, int dice_number, RuleDefinitions.DieType die_type)> frozen_fury_damages = new List<(int level, int dice_number, RuleDefinitions.DieType die_type)>
+            {
+                {(5, 1, RuleDefinitions.DieType.D6) },
+                {(9, 1, RuleDefinitions.DieType.D10) },
+                {(13, 2, RuleDefinitions.DieType.D6) },
+                {(20, 2, RuleDefinitions.DieType.D10) }
+            };
+
+            List<(int, FeatureDefinitionPower)> power_list = new List<(int, FeatureDefinitionPower)>();
+            foreach (var entry in frozen_fury_damages)
+            {
+                var damage = new DamageForm();
+                damage.DiceNumber = entry.dice_number;
+                damage.DieType = entry.die_type;
+                damage.VersatileDieType = entry.die_type;
+                damage.DamageType = Helpers.DamageTypes.Cold;
+
+                var effect = new EffectDescription();
+                effect.Copy(DatabaseHelper.SpellDefinitions.FireShieldCold.EffectDescription);
+                effect.SetRangeType(RuleDefinitions.RangeType.Self);
+                effect.SetTargetType(RuleDefinitions.TargetType.Sphere);
+                effect.SetTargetSide(RuleDefinitions.Side.All);
+                effect.SetTargetParameter(2);
+                effect.SetTargetParameter2(1);
+                effect.SetRangeParameter(1);
+                effect.SetCanBePlacedOnCharacter(true);
+                effect.DurationType = RuleDefinitions.DurationType.Instantaneous;
+                effect.DurationParameter = 0;
+                effect.SetEffectParticleParameters(DatabaseHelper.FeatureDefinitionPowers.PowerDomainElementalHeraldOfTheElementsCold.EffectDescription.EffectParticleParameters);
+                effect.SetTargetExcludeCaster(true);
+
+                effect.EffectForms.Clear();
+                var effect_form = new EffectForm();
+                effect_form.DamageForm = damage;
+                effect_form.FormType = EffectForm.EffectFormType.Damage;
+                effect.EffectForms.Add(effect_form);
+
+
+                var power = Helpers.PowerBuilder.createPower("BarbarianSubclassFrozenFuryWintersFuryPower" + entry.level,
+                                                         "",
+                                                         winters_fury_title_string,
+                                                         winters_fury_description_string,
+                                                         null,
+                                                         DatabaseHelper.FeatureDefinitionPowers.PowerDomainElementalHeraldOfTheElementsCold,
+                                                         effect,
+                                                         RuleDefinitions.ActivationTime.NoCost,
+                                                         1,
+                                                         RuleDefinitions.UsesDetermination.Fixed,
+                                                         RuleDefinitions.RechargeRate.AtWill,
+                                                         show_casting: false);
+                power_list.Add((entry.level, power));
+            }
+
+            frozen_fury_rage_feature = Helpers.FeatureBuilder<NewFeatureDefinitions.ApplyPowerOnTurnEndBasedOnClassLevel>.createFeature("BarbarianSubclassFrozenFuryWintersFuryRageFeature",
+                                                                                                                                          "",
+                                                                                                                                          winters_fury_title_string,
+                                                                                                                                          winters_fury_description_string,
+                                                                                                                                          null,
+                                                                                                                                          f =>
+                                                                                                                                          {
+                                                                                                                                              f.characterClass = barbarian_class;
+                                                                                                                                              f.powerLevelList = power_list;
+                                                                                                                                              //will fill subclass in FrozenFuryPath creation
+                                                                                                                                          }
+                                                                                                                                          );
+
+            foreach (var rp in rage_powers)
+            {
+                var rage_conditon = rp.Value.EffectDescription.EffectForms[0].conditionForm.conditionDefinition;
+                rage_conditon.Features.Add(frozen_fury_rage_feature);
+            }
+
+            frozen_fury = Helpers.OnlyDescriptionFeatureBuilder.createOnlyDescriptionFeature("BarbarianSubclassFrozenFuryWintersFuryFeature",
+                                                                                             "",
+                                                                                             winters_fury_title_string,
+                                                                                             winters_fury_description_string
+                                                                                             );
+
         }
+
 
         public static void BuildAndAddClassToDB()
         {
@@ -732,9 +732,7 @@ namespace SolastaBarbarianClass
                                           }
                                          );
 
-            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createLoreCollege().Name);
-            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createVirtueCollege().Name);
-            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createNatureCollege().Name);
+            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfFrozenFury().Name);
         }
 
         private static FeatureDefinitionSubclassChoice BarbarianFeatureDefinitionSubclassChoice;
