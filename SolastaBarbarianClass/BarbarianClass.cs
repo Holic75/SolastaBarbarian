@@ -21,6 +21,7 @@ namespace SolastaBarbarianClass
         static Dictionary<int, int> rage_bonus_damage_level_map = new Dictionary<int, int> { { 2, 1 }, { 3, 9 }, { 4, 16 } };
         static List<int> rage_uses_increase_levels = new List<int> { 3, 6, 12, 17 };
         static public NewFeatureDefinitions.ArmorClassStatBonus unarmored_defense;
+        static public NewFeatureDefinitions.SpellcastingForbidden rage_spellcasting_forbiden;
         static public Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions> rage_powers = new Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions>();
         static public NewFeatureDefinitions.PowerWithRestrictions reckless_attack_power;
         static public FeatureDefinitionFeatureSet reckless_attack;
@@ -30,10 +31,21 @@ namespace SolastaBarbarianClass
         static public FeatureDefinitionMovementAffinity fast_movement;
         static public FeatureDefinitionFeatureSet feral_instinct;
         static public NewFeatureDefinitions.WeaponDamageDiceIncreaseOnCriticalHit brutal_critical;
+        //Frozen Fury
         static NewFeatureDefinitions.ApplyPowerOnTurnEndBasedOnClassLevel frozen_fury_rage_feature;
         static public FeatureDefinition frozen_fury;
         static public NewFeatureDefinitions.ArmorBonusAgainstAttackType frigid_body;
         static public FeatureDefinitionFeatureSet numb;
+        //War Shaman
+        static public SpellListDefinition war_shaman_spelllist;
+        static public FeatureDefinitionCastSpell war_shaman_spellcasting;
+        static public Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions> share_rage_powers = new Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions>();
+        static public FeatureDefinition ragecaster;
+
+        //Berserker
+        //frenzy
+        //mindless rage
+        //intimidating presence
      
         static public CharacterClassDefinition barbarian_class;
         //More Paths: Berserker, War shaman,
@@ -286,7 +298,7 @@ namespace SolastaBarbarianClass
         {
             string reckless_attack_title_string = "Feature/&BarbarianClassRecklessAttackPowerTitle";
             string reckless_attack_description_string = "Feature/&BarbarianClassRecklessAttackPowerDescription";
-            string reckless_attack_condition_string = "Rules/&BarbarianClassRecklessAttackCondition";
+            string reckless_condition_string = "Rules/&BarbarianClassRecklessCondition";
 
             var condition_attacked_this_turn = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassAttackedThisTurnCondition",
                                                                                                          "",
@@ -313,7 +325,7 @@ namespace SolastaBarbarianClass
 
             var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassRecklessAttackCondition",
                                                                                       "",
-                                                                                      reckless_attack_title_string,
+                                                                                      reckless_condition_string,
                                                                                       reckless_attack_description_string,
                                                                                       null,
                                                                                       DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
@@ -360,7 +372,7 @@ namespace SolastaBarbarianClass
                                                          "",
                                                          reckless_attack_title_string,
                                                          reckless_attack_description_string,
-                                                         DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDivineWrath.GuiPresentation.SpriteReference,
+                                                         DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDecisiveStrike.GuiPresentation.SpriteReference,
                                                          effect,
                                                          RuleDefinitions.ActivationTime.NoCost,
                                                          1,
@@ -392,6 +404,17 @@ namespace SolastaBarbarianClass
             string rage_title_string = "Feature/&BarbarianClassRagePowerTitle";
             string rage_description_string = "Feature/&BarbarianClassRagePowerDescription";
             string rage_condition_string = "Rules/&BarbarianClassRageCondition";
+
+            rage_spellcasting_forbiden = Helpers.FeatureBuilder<NewFeatureDefinitions.SpellcastingForbidden>.createFeature("BarbarianClassRageSpellcastingForbidden",
+                                                                                                                           "",
+                                                                                                                           Common.common_no_title,
+                                                                                                                           Common.common_no_title,
+                                                                                                                           Common.common_no_icon,
+                                                                                                                           r =>
+                                                                                                                           {
+                                                                                                                               r.exceptionFeatures = new List<FeatureDefinition>();
+                                                                                                                           }
+                                                                                                                           );
 
             var condition_can_continue_rage = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassCanContinueRageCondition",
                                                                                                           "",
@@ -431,7 +454,8 @@ namespace SolastaBarbarianClass
                                                                                           DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityPiercingResistance,
                                                                                           DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinitySlashingResistance,
                                                                                           DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityConditionBullsStrength,
-                                                                                          damage_bonus
+                                                                                          damage_bonus,
+                                                                                          rage_spellcasting_forbiden
                                                                                           );
 
                 var rage_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.RageWatcher>.createFeature("BarbarianClassRageAttackWatcher" + kv.Value.ToString(),
@@ -471,7 +495,7 @@ namespace SolastaBarbarianClass
                                                                                                              rage_title_string + kv.Value.ToString(),
                                                                                                              $" (+{kv.Key})"),
                                                              rage_description_string,
-                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.GuiPresentation.SpriteReference,
+                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDivineWrath.GuiPresentation.SpriteReference,
                                                              effect,
                                                              RuleDefinitions.ActivationTime.BonusAction,
                                                              2 + rage_uses_increase_levels.Count(l => l < kv.Value),
@@ -539,7 +563,7 @@ namespace SolastaBarbarianClass
 
         static CharacterSubclassDefinition createPathOfFrozenFury()
         {
-            createFrozenFury();
+            createWintersFury();
             createFrigidBody();
             createNumb();
 
@@ -637,7 +661,7 @@ namespace SolastaBarbarianClass
         }
 
 
-        static void createFrozenFury()
+        static void createWintersFury()
         {
             string winters_fury_title_string = "Feature/&BarbarianSubclassFrozenFuryWintersFuryTitle";
             string winters_fury_description_string = "Feature/&BarbarianSubclassFrozenFuryWintersFuryDescription";
@@ -722,6 +746,200 @@ namespace SolastaBarbarianClass
 
         }
 
+        static void createWarShamanSpellcasting()
+        {
+            war_shaman_spelllist = Helpers.SpelllistBuilder.create9LevelSpelllist("BarbarianSubclassWarshamanSpelllist", "", "",
+                                                                    new List<SpellDefinition>
+                                                                    {
+                                                                                    DatabaseHelper.SpellDefinitions.AnnoyingBee,
+                                                                                    DatabaseHelper.SpellDefinitions.Guidance,
+                                                                                    DatabaseHelper.SpellDefinitions.PoisonSpray,
+                                                                                    DatabaseHelper.SpellDefinitions.Resistance,
+                                                                    },
+                                                                    new List<SpellDefinition>
+                                                                    {
+                                                                                    DatabaseHelper.SpellDefinitions.AnimalFriendship,
+                                                                                    DatabaseHelper.SpellDefinitions.CharmPerson,
+                                                                                    DatabaseHelper.SpellDefinitions.CureWounds,
+                                                                                    DatabaseHelper.SpellDefinitions.DetectMagic,
+                                                                                    DatabaseHelper.SpellDefinitions.FaerieFire,
+                                                                                    DatabaseHelper.SpellDefinitions.FogCloud,
+                                                                                    DatabaseHelper.SpellDefinitions.Goodberry,
+                                                                                    DatabaseHelper.SpellDefinitions.HealingWord,
+                                                                                    DatabaseHelper.SpellDefinitions.Jump,
+                                                                                    DatabaseHelper.SpellDefinitions.Longstrider,
+                                                                                    DatabaseHelper.SpellDefinitions.Thunderwave
+                                                                    },
+                                                                    new List<SpellDefinition>
+                                                                    {
+                                                                                    DatabaseHelper.SpellDefinitions.Barkskin,
+                                                                                    DatabaseHelper.SpellDefinitions.Darkvision,
+                                                                                    DatabaseHelper.SpellDefinitions.EnhanceAbility,
+                                                                                    DatabaseHelper.SpellDefinitions.FindTraps,
+                                                                                    DatabaseHelper.SpellDefinitions.FlameBlade,
+                                                                                    DatabaseHelper.SpellDefinitions.FlamingSphere,
+                                                                                    DatabaseHelper.SpellDefinitions.GustOfWind,
+                                                                                    DatabaseHelper.SpellDefinitions.HoldPerson,
+                                                                                    DatabaseHelper.SpellDefinitions.LesserRestoration,
+                                                                                    DatabaseHelper.SpellDefinitions.PassWithoutTrace,
+                                                                                    DatabaseHelper.SpellDefinitions.ProtectionFromPoison
+                                                                    },
+                                                                    new List<SpellDefinition>
+                                                                    {
+                                                                                    DatabaseHelper.SpellDefinitions.ConjureAnimals,
+                                                                                    DatabaseHelper.SpellDefinitions.Daylight,
+                                                                                    DatabaseHelper.SpellDefinitions.DispelMagic,
+                                                                                    DatabaseHelper.SpellDefinitions.ProtectionFromEnergy,
+                                                                                    DatabaseHelper.SpellDefinitions.SleetStorm,
+                                                                                    DatabaseHelper.SpellDefinitions.WindWall
+                                                                    },
+                                                                    new List<SpellDefinition>
+                                                                    {
+                                                                                    DatabaseHelper.SpellDefinitions.Blight,
+                                                                                    DatabaseHelper.SpellDefinitions.Confusion,
+                                                                                    DatabaseHelper.SpellDefinitions.FreedomOfMovement,
+                                                                                    DatabaseHelper.SpellDefinitions.GiantInsect,
+                                                                                    DatabaseHelper.SpellDefinitions.IceStorm,
+                                                                                    DatabaseHelper.SpellDefinitions.Stoneskin,
+                                                                                    DatabaseHelper.SpellDefinitions.WallOfFire
+                                                                    }
+                                                                    );
+            war_shaman_spelllist.SetMaxSpellLevel(4);
+            war_shaman_spelllist.SetHasCantrips(true);
+
+            war_shaman_spellcasting = Helpers.SpellcastingBuilder.createSpontaneousSpellcasting("BarbarianSubclassWarshamanSpellcasting",
+                                                                                              "",
+                                                                                              "Feature/&BarbarianSubclassWarShamanClassSpellcastingTitle",
+                                                                                              "Feature/&BarbarianSubclassWarShamanClassSpellcastingDescription",
+                                                                                              war_shaman_spelllist,
+                                                                                              Helpers.Stats.Wisdom,
+                                                                                              new List<int> {0, 0, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                                                                             3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
+                                                                                              new List<int> { 0,  0,  3,  4,  4,  4,  5,  6,  6,  7,
+                                                                                                              8,  8,  9, 10, 10, 11, 11, 11, 12, 13},
+                                                                                              Helpers.Misc.createSpellSlotsByLevel(new List<int> { 0, 0, 0, 0 }, 
+                                                                                                                                   new List<int> { 0, 0, 0, 0 },
+                                                                                                                                   new List<int> { 2, 0, 0, 0 },//3
+                                                                                                                                   new List<int> { 3, 0, 0, 0 },//4
+                                                                                                                                   new List<int> { 3, 0, 0, 0 },//5
+                                                                                                                                   new List<int> { 3, 0, 0, 0 },//6
+                                                                                                                                   new List<int> { 4, 2, 0, 0 },//7
+                                                                                                                                   new List<int> { 4, 2, 0, 0 },//8
+                                                                                                                                   new List<int> { 4, 2, 0, 0 },//9
+                                                                                                                                   new List<int> { 4, 3, 0, 0 },//10
+                                                                                                                                   new List<int> { 4, 3, 0, 0 },//11
+                                                                                                                                   new List<int> { 4, 3, 0, 0 },//12
+                                                                                                                                   new List<int> { 4, 3, 2, 0 },//13
+                                                                                                                                   new List<int> { 4, 3, 2, 0 },//14
+                                                                                                                                   new List<int> { 4, 3, 2, 0 },//15
+                                                                                                                                   new List<int> { 4, 3, 3, 0 },//16
+                                                                                                                                   new List<int> { 4, 3, 3, 0 },//17
+                                                                                                                                   new List<int> { 4, 3, 3, 0 },//18
+                                                                                                                                   new List<int> { 4, 3, 3, 1 },//19
+                                                                                                                                   new List<int> { 4, 3, 3, 1 }//20
+                                                                                                                                   )
+                                                                                              );
+            war_shaman_spellcasting.SetSpellCastingLevel(-1);
+            war_shaman_spellcasting.SetSpellCastingOrigin(FeatureDefinitionCastSpell.CastingOrigin.Subclass);
+        }
+
+
+        static void createRagecaster()
+        {
+            string ragecaster_title_string = "Feature/&BarbarianSubclassWarShamanClassRagecasterTitle";
+            string ragecaster_description_string = "Feature/&BarbarianSubclassWarShamanClassRagecasterDescription";
+
+            ragecaster = Helpers.OnlyDescriptionFeatureBuilder.createOnlyDescriptionFeature("BarbarianSubclassWarshamanRagecaster",
+                                                                                            "",
+                                                                                            ragecaster_title_string,
+                                                                                            ragecaster_description_string
+                                                                                            );
+            rage_spellcasting_forbiden.exceptionFeatures.Add(ragecaster);
+        }
+
+
+        static void createShareRage()
+        {
+            string share_rage_title_string = "Feature/&BarbarianSubclassWarShamanClassShareRageTitle";
+            string share_rage_description_string = "Feature/&BarbarianSubclassWarShamanClassShareRageDescription";
+
+            NewFeatureDefinitions.PowerWithRestrictions previous_power = null;
+
+            foreach (var kv in rage_bonus_damage_level_map)
+            {
+                var power = Helpers.CopyFeatureBuilder<NewFeatureDefinitions.PowerWithRestrictions>.createFeatureCopy("BarbarianSubclassWarshamanShareRagePower" + kv.Value.ToString(),
+                                                                                                                      "",
+                                                                                                                      Helpers.StringProcessing.appendToString(share_rage_title_string,
+                                                                                                                                                              share_rage_title_string + kv.Value.ToString(),
+                                                                                                                                                              $" (+{kv.Key})"),
+                                                                                                                      share_rage_description_string,
+                                                                                                                      DatabaseHelper.FeatureDefinitionPowers.PowerDomainLawHolyRetribution.GuiPresentation.SpriteReference,
+                                                                                                                      rage_powers[kv.Value]
+                                                                                                                      );
+                var effect = new EffectDescription();
+                effect.Copy(DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleHeraldOfBattle.EffectDescription);
+                effect.SetRangeType(RuleDefinitions.RangeType.Distance);
+                effect.SetRangeParameter(6);
+                effect.SetTargetParameter(1);
+                effect.SetTargetParameter2(1);
+                effect.DurationParameter = 1;
+                effect.DurationType = RuleDefinitions.DurationType.Minute;
+                effect.EffectForms.Clear();
+                effect.SetTargetType(RuleDefinitions.TargetType.Individuals);
+                effect.SetTargetSide(RuleDefinitions.Side.Ally);
+                effect.SetTargetFilteringTag((RuleDefinitions.TargetFilteringTag)(ExtendedEnums.ExtraTargetFilteringTag.NonCaster | ExtendedEnums.ExtraTargetFilteringTag.NoHeavyArmor));
+
+                effect.EffectForms.Add(rage_powers[kv.Value].EffectDescription.EffectForms[0]);
+                var effect_form = new EffectForm();
+                effect_form.ConditionForm = new ConditionForm();
+                effect_form.FormType = EffectForm.EffectFormType.Condition;
+                effect_form.ConditionForm.Operation = ConditionForm.ConditionOperation.Add;
+                effect_form.ConditionForm.ConditionDefinition = rage_powers[kv.Value].EffectDescription.EffectForms[0].conditionForm.conditionDefinition;
+                effect_form.conditionForm.SetApplyToSelf(true);
+                effect.EffectForms.Add(effect_form);
+
+                power.SetEffectDescription(effect);
+                power.SetRechargeRate(RuleDefinitions.RechargeRate.SpellSlot);
+                power.SetSpellcastingFeature(war_shaman_spellcasting);
+                power.SetFixedUsesPerRecharge(10);
+
+                if (previous_power != null)
+                {
+                    power.SetOverriddenPower(previous_power);
+                }
+                previous_power = power;
+                power.SetShortTitleOverride(share_rage_title_string);
+                power.linkedPower = rage_powers[kv.Value];
+
+                share_rage_powers.Add(kv.Value, power);
+            }
+        }
+
+
+        static CharacterSubclassDefinition createPathOfWarShaman()
+        {
+            createWarShamanSpellcasting();
+            createShareRage();
+            createRagecaster();
+
+            var gui_presentation = new GuiPresentationBuilder(
+                    "Subclass/&BarbarianSubclassPrimalPathOfWarShamanDescription",
+                    "Subclass/&BarbarianSubclassPrimalPathOfWarShamanTitle")
+                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.TraditionGreenmage.GuiPresentation.SpriteReference)
+                    .Build();
+
+            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassPrimalPathOfWarShaman", "a126dff4-f95b-4352-969a-4b28558f2a82")
+                    .SetGuiPresentation(gui_presentation)
+                    .AddFeatureAtLevel(war_shaman_spellcasting, 3)
+                    .AddFeatureAtLevel(share_rage_powers[1], 6)
+                    .AddFeatureAtLevel(share_rage_powers[9], 9)
+                    .AddFeatureAtLevel(ragecaster, 10)
+                    .AddFeatureAtLevel(share_rage_powers[16], 16)
+                    .AddToDB();
+
+            return definition;
+        }
+
 
         public static void BuildAndAddClassToDB()
         {
@@ -733,6 +951,7 @@ namespace SolastaBarbarianClass
                                          );
 
             BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfFrozenFury().Name);
+            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfWarShaman().Name);
         }
 
         private static FeatureDefinitionSubclassChoice BarbarianFeatureDefinitionSubclassChoice;

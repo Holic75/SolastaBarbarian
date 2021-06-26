@@ -1,6 +1,6 @@
 # Barbarian class for Solasta
 
-This is a mod for the game Solasta: Crown of the Magister.
+This is a mod for the game Solasta: Crown of the Magister. It adds Barbarian class with 2 primal path subclasses: Frozen Fury and  War Shaman.
 
 # How to Compile
 
