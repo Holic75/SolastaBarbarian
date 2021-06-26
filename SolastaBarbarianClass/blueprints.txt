@@ -65,8 +65,6 @@ BarbarianSubclassFrozenFuryFrigidBody	c5cdb7fb-08ab-4670-a4e4-e7c002c4d284
 BarbarianSubclassFrozenFuryNumbImmunity	db62700a-90e2-4b01-8e72-8fa1b172eeba
 BarbarianSubclassFrozenFuryNumbRemoval	6a002450-2f9b-4530-88e6-4fc205a2e75d
 BarbarianSubclassFrozenFuryNumb	4a37b9ff-dfc1-4699-8811-b977349f28e4
-arbarianSubclassWarshamanSpelllist	0f3d14a7-f9a1-41ec-a164-f3e0f3800104
-arbarianSubclassSpellcasting	d03f4cf0-ac7a-4f41-915f-f0bf9d9ca93c
 BarbarianSubclassWarshamanSpelllist	d5652599-ca2f-4c84-a692-bf28ebe9dfec
 BarbarianSubclassWarshamanSpellcasting	1df487ba-7a7c-444c-838d-cf5e4c22487e
 BarbarianClassRageSpellcastingForbidden	2693f7e3-6971-42fe-98ba-51604c8a6b4b
