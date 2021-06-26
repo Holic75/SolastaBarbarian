@@ -43,3 +43,9 @@ Feature/&BarbarianSubclassWarShamanClassShareRageTitle Share Rage
 Feature/&BarbarianSubclassWarShamanClassShareRageDescription Starting at 6th level, as part of the same bonus action you use to enter a rage, you can expend a spell slot of 1st level or higher. If you do so, choose a willing creature you can see within 30 feet of you. Provided your target can see or hear you, and it isn't wearing heavy armor, it also rages. It gains the effects of the Rage feature, including your Rage Damage bonus. 
 Feature/&BarbarianSubclassWarShamanClassRagecasterTitle Ragecaster
 Feature/&BarbarianSubclassWarShamanClassRagecasterDescription At 10th level, you can cast druid spells while raging. The range of your Share Rage feature increases to 60 feet.
+Subclass/&BarbarianSubclassPrimalPathOfBerserkerTitle Berserker
+Subclass/&BarbarianSubclassPrimalPathOfBerserkerDescription For some barbarians, rage is a means to an end - that end being violence. The Path of the Berserker is a path of untrammeled fury, slick with blood. As you enter the berserker's rage, you thrill in the chaos of battle, heedless of your own health or well-being.
+Feature/&BarbarianSubclassBerserkerFrenzyTitle Frenzy
+Feature/&BarbarianSubclassBerserkerFrenzyDescription Starting when you choose this path at 3rd level, you can go into a frenzy as a bonus action when you are enraged. If you do so, for the duration of your rage you can make an extra single weapon attack as a bonus action, but you can no longer use bonus actions. When your rage ends, you become exhausted until you take a long rest.
+Feature/&BarbarianSubclassBerserkerFrenzyExhaustedTitle Exhausted
+Feature/&BarbarianSubclassBerserkerFrenzyExhaustedDescripton You receive a disvantage on all ability checks.

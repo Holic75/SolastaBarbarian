@@ -42,11 +42,14 @@ namespace SolastaBarbarianClass
         static public Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions> share_rage_powers = new Dictionary<int, NewFeatureDefinitions.PowerWithRestrictions>();
         static public FeatureDefinition ragecaster;
 
+
         //Berserker
         //frenzy
+        static public NewFeatureDefinitions.PowerWithRestrictions frenzy;
+        static public ConditionDefinition exhausted_after_frenzy_condition;
         //mindless rage
         //intimidating presence
-     
+
         static public CharacterClassDefinition barbarian_class;
         //More Paths: Berserker, War shaman,
 
@@ -189,7 +192,6 @@ namespace SolastaBarbarianClass
             subclassChoicesGuiPresentation.Description = "Subclass/&BarbarianSubclassPrimalPathDescription";
             BarbarianFeatureDefinitionSubclassChoice = this.BuildSubclassChoice(3, "PrimalPath", false, "SubclassChoiceBarbarianSpecialistArchetypes", subclassChoicesGuiPresentation, BarbarianClassSubclassesGuid);
         }
-
 
         static void createBrutalCritical()
         {
@@ -941,6 +943,137 @@ namespace SolastaBarbarianClass
         }
 
 
+        static void createFrenzy()
+        {
+            string frenzy_exhausted_title_string = "Feature/&BarbarianSubclassBerserkerFrenzyExhaustedTitle";
+            string frenzy_exhausted_description_string = "Feature/&BarbarianSubclassBerserkerFrenzyExhaustedDescription";
+
+
+            exhausted_after_frenzy_condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianSubclassBerserkerFrenzyExhasutedCondition",
+                                                                                      "",
+                                                                                      frenzy_exhausted_title_string,
+                                                                                      frenzy_exhausted_description_string,
+                                                                                      null,
+                                                                                      DatabaseHelper.ConditionDefinitions.ConditionExhausted,
+                                                                                      new RuleDefinitions.ConditionInterruption[] { RuleDefinitions.ConditionInterruption.AnyBattleTurnEnd },
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseStrength,
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseDexterity,
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseConstitution,
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseIntelligence,
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseWisdom,
+                                                                                      DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseCharisma
+                                                                                      );
+            exhausted_after_frenzy_condition.SetConditionType(RuleDefinitions.ConditionType.Detrimental);
+
+            string frenzy_title_string = "Feature/&BarbarianSubclassBerserkerFrenzyTitle";
+            string frenzy_description_string = "Feature/&BarbarianSubclassBerserkerFrenzyDescription";
+            var feature_attack = Helpers.CopyFeatureBuilder<FeatureDefinitionAttributeModifier>.createFeatureCopy("BarbarianSubclassBerserkerFrenzyExtraAttack",
+                                                                                                           "",
+                                                                                                           "",
+                                                                                                           "",
+                                                                                                           null,
+                                                                                                           DatabaseHelper.FeatureDefinitionAttributeModifiers.AttributeModifierFighterExtraAttack
+                                                                                                           );
+            var feature_no_bonus_attack = Helpers.CopyFeatureBuilder<FeatureDefinitionActionAffinity>.createFeatureCopy("BarbarianSubclassBerserkerNoBonusAction",
+                                                                                                                           "",
+                                                                                                                           "",
+                                                                                                                           "",
+                                                                                                                           null,
+                                                                                                                           DatabaseHelper.FeatureDefinitionActionAffinitys.ActionAffinityConditionRestrained,
+                                                                                                                           a =>
+                                                                                                                           {
+                                                                                                                               a.allowedActionTypes = new bool[]
+                                                                                                                               {
+                                                                                                                                   true, false, true, true, true, true
+                                                                                                                               };
+                                                                                                                           }
+                                                                                                                           );
+
+            var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianSubclassBerserkerFrenzyCondition",
+                                                                          "",
+                                                                          frenzy_title_string,
+                                                                          frenzy_description_string,
+                                                                          null,
+                                                                          DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
+                                                                          new RuleDefinitions.ConditionInterruption[] {},
+                                                                          feature_attack,
+                                                                          feature_no_bonus_attack
+                                                                          );
+
+            var frenzy_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.FrenzyWatcher>.createFeature("BarbarianSubclassBerserkerFrenzyWatcher",
+                                                                               "",
+                                                                               Common.common_no_title,
+                                                                               Common.common_no_title,
+                                                                               null,
+                                                                               r =>
+                                                                               {
+                                                                                   r.requiredConditions = rage_powers.Select(kv => kv.Value.EffectDescription.EffectForms[0].conditionForm.conditionDefinition).ToList();
+                                                                                   r.targetCondition = condition;
+                                                                                   r.afterCondition = exhausted_after_frenzy_condition;
+                                                                               }
+                                                                               );
+
+            condition.Features.Add(frenzy_watcher);
+
+            var effect = new EffectDescription();
+            effect.Copy(DatabaseHelper.SpellDefinitions.Heroism.EffectDescription);
+            effect.SetRangeType(RuleDefinitions.RangeType.Self);
+            effect.SetRangeParameter(1);
+            effect.DurationParameter = 1;
+            effect.DurationType = RuleDefinitions.DurationType.Minute;
+            effect.EffectForms.Clear();
+            effect.SetTargetType(RuleDefinitions.TargetType.Self);
+
+            var effect_form = new EffectForm();
+            effect_form.ConditionForm = new ConditionForm();
+            effect_form.FormType = EffectForm.EffectFormType.Condition;
+            effect_form.ConditionForm.Operation = ConditionForm.ConditionOperation.Add;
+            effect_form.ConditionForm.ConditionDefinition = condition;
+            effect.EffectForms.Add(effect_form);
+
+            frenzy = Helpers.GenericPowerBuilder<NewFeatureDefinitions.PowerWithRestrictions>
+                                                      .createPower("BarbarianSubclassBerserkerFrenzyPower",
+                                                         "",
+                                                         frenzy_title_string,
+                                                         frenzy_description_string,
+                                                         DatabaseHelper.FeatureDefinitionPowers.PowerOathOfTirmarSmiteTheHidden.GuiPresentation.SpriteReference,
+                                                         effect,
+                                                         RuleDefinitions.ActivationTime.BonusAction,
+                                                         1,
+                                                         RuleDefinitions.UsesDetermination.Fixed,
+                                                         RuleDefinitions.RechargeRate.LongRest
+                                                         );
+            frenzy.restrictions = new List<NewFeatureDefinitions.IRestriction>()
+            {
+                new NewFeatureDefinitions.InBattleRestriction(),
+                new NewFeatureDefinitions.NoConditionRestriction(exhausted_after_frenzy_condition),
+                new NewFeatureDefinitions.HasAtLeastOneConditionFromListRestriction(rage_powers.Select(kv => kv.Value.EffectDescription.EffectForms[0].conditionForm.conditionDefinition).ToArray())
+            };
+
+            frenzy.SetShortTitleOverride(frenzy_title_string);
+        }
+
+
+
+        static CharacterSubclassDefinition createPathOfBerserker()
+        {
+            createFrenzy();
+
+            var gui_presentation = new GuiPresentationBuilder(
+                    "Subclass/&BarbarianSubclassPrimalPathOfBerserkerDescription",
+                    "Subclass/&BarbarianSubclassPrimalPathOfBerserkerTitle")
+                    .SetSpriteReference(DatabaseHelper.CharacterSubclassDefinitions.RoguishDarkweaver.GuiPresentation.SpriteReference)
+                    .Build();
+
+            CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassPrimalPathOfBersrker", "3356b777-cf53-469c-93f4-766c52664016")
+                    .SetGuiPresentation(gui_presentation)
+                    .AddFeatureAtLevel(frenzy, 3)
+                    .AddToDB();
+
+            return definition;
+        }
+
+
         public static void BuildAndAddClassToDB()
         {
             var BarbarianClass = new BarbarianClassBuilder(BarbarianClassName, BarbarianClassNameGuid).AddToDB();
@@ -950,6 +1083,7 @@ namespace SolastaBarbarianClass
                                           }
                                          );
 
+            BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfBerserker().Name);
             BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfFrozenFury().Name);
             BarbarianFeatureDefinitionSubclassChoice.Subclasses.Add(createPathOfWarShaman().Name);
         }
