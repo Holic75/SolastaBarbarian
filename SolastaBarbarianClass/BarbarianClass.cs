@@ -47,11 +47,11 @@ namespace SolastaBarbarianClass
         //frenzy
         static public NewFeatureDefinitions.PowerWithRestrictions frenzy;
         static public ConditionDefinition exhausted_after_frenzy_condition;
-        //mindless rage
-        //intimidating presence
+        static public FeatureDefinitionFeatureSet mindless_rage;
+        static public FeatureDefinitionPower intimidating_presence;
+        static public FeatureDefinitionFeatureSet intimidating_presence_feature;
 
         static public CharacterClassDefinition barbarian_class;
-        //More Paths: Berserker, War shaman,
 
 
         protected BarbarianClassBuilder(string name, string guid) : base(name, guid)
@@ -947,6 +947,7 @@ namespace SolastaBarbarianClass
         {
             string frenzy_exhausted_title_string = "Feature/&BarbarianSubclassBerserkerFrenzyExhaustedTitle";
             string frenzy_exhausted_description_string = "Feature/&BarbarianSubclassBerserkerFrenzyExhaustedDescription";
+            string frenzy_condition_title_string = "Rules/&BarbarianSubclassBerserkerFrenzyCondition";
 
 
             exhausted_after_frenzy_condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianSubclassBerserkerFrenzyExhasutedCondition",
@@ -991,7 +992,7 @@ namespace SolastaBarbarianClass
 
             var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianSubclassBerserkerFrenzyCondition",
                                                                           "",
-                                                                          frenzy_title_string,
+                                                                          frenzy_condition_title_string,
                                                                           frenzy_description_string,
                                                                           null,
                                                                           DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
@@ -1020,7 +1021,7 @@ namespace SolastaBarbarianClass
             effect.SetRangeType(RuleDefinitions.RangeType.Self);
             effect.SetRangeParameter(1);
             effect.DurationParameter = 1;
-            effect.DurationType = RuleDefinitions.DurationType.Minute;
+            effect.DurationType = RuleDefinitions.DurationType.UntilLongRest;
             effect.EffectForms.Clear();
             effect.SetTargetType(RuleDefinitions.TargetType.Self);
 
@@ -1054,10 +1055,154 @@ namespace SolastaBarbarianClass
         }
 
 
+        static void createMindlessRage()
+        {
+            string mindless_rage_title_string = "Feature/&BarbarianSubclassMindlessRageTitle";
+            string mindless_rage_description_string = "Feature/&BarbarianSubclassMindlessRageDescription";
+
+            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionCharmed, DatabaseHelper.ConditionDefinitions.ConditionFrightened };
+            var immunity = Helpers.FeatureBuilder<NewFeatureDefinitions.ImmunityToCondtionIfHasSpecificConditions>.createFeature("BarbarianSubclassBerserkerMindlessRageImmunity",
+                                                                                                                                    "",
+                                                                                                                                    mindless_rage_title_string,
+                                                                                                                                    mindless_rage_description_string,
+                                                                                                                                    null,
+                                                                                                                                    f =>
+                                                                                                                                    {
+                                                                                                                                        f.immuneCondtions = conditons;
+                                                                                                                                        f.requiredConditions = new List<ConditionDefinition>();
+                                                                                                                                    }
+                                                                                                                                    );
+
+            var removal = Helpers.FeatureBuilder<NewFeatureDefinitions.RemoveConditionsOnConditionApplication>.createFeature("BarbarianSubclassBerserkerMindlessRageRemoval",
+                                                                                                                              "",
+                                                                                                                              mindless_rage_title_string,
+                                                                                                                              mindless_rage_description_string,
+                                                                                                                              null,
+                                                                                                                              f =>
+                                                                                                                              {
+                                                                                                                                  f.removeConditions = conditons;
+                                                                                                                                  f.appliedConditions = new List<ConditionDefinition>();
+                                                                                                                              }
+                                                                                                                              );
+
+            foreach (var rp in rage_powers)
+            {
+                immunity.requiredConditions.Add(rp.Value.EffectDescription.EffectForms[0].ConditionForm.ConditionDefinition);
+                removal.appliedConditions.Add(rp.Value.EffectDescription.EffectForms[0].ConditionForm.ConditionDefinition);
+            }
+
+
+            mindless_rage = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianSubclassBerserkerMindlessRage",
+                                                                          "",
+                                                                          mindless_rage_title_string,
+                                                                          mindless_rage_description_string,
+                                                                          false,
+                                                                          FeatureDefinitionFeatureSet.FeatureSetMode.Union,
+                                                                          false,
+                                                                          immunity,
+                                                                          removal
+                                                                          );
+        }
+
+
+        static void createIntimidatingPresence()
+        {
+            string intimidating_presence_title_string = "Feature/&BarbarianSubclassBerserkerIntimidatingPresenceTitle";
+            string intimidating_presence_description_string = "Feature/&BarbarianSubclassBerserkerIntimidatingPresenceDescription";
+
+            var immune_condition = Helpers.CopyFeatureBuilder<ConditionDefinition>.createFeatureCopy("BarbarianSubclassBerserkerIntimidatingPresenceImmunityCondition",
+                                                                                                     "",
+                                                                                                     Common.common_no_title,
+                                                                                                     Common.common_no_title,
+                                                                                                     Common.common_no_icon,
+                                                                                                     DatabaseHelper.ConditionDefinitions.ConditionTemporaryHitPoints,
+                                                                                                     c =>
+                                                                                                     {
+                                                                                                         c.features = new List<FeatureDefinition>();
+                                                                                                         c.SetConditionType(RuleDefinitions.ConditionType.Neutral);
+                                                                                                         c.SetSpecialDuration(true);
+                                                                                                         c.SetDurationType(RuleDefinitions.DurationType.UntilLongRest);
+                                                                                                         c.SetDurationParameterDie(RuleDefinitions.DieType.D1);
+                                                                                                     }
+                                                                                                     );
+            immune_condition.SetSilentWhenAdded(true);
+            immune_condition.SetSilentWhenRemoved(true);
+
+
+            //Add to our new effect
+            EffectDescription effect_description = new EffectDescription();
+            effect_description.Copy(DatabaseHelper.FeatureDefinitionPowers.PowerDomainOblivionMarkOfFate.EffectDescription);
+            effect_description.SetSavingThrowDifficultyAbility(Helpers.Stats.Charisma);
+            effect_description.SetDifficultyClassComputation(RuleDefinitions.EffectDifficultyClassComputation.AbilityScoreAndProficiency);
+            effect_description.SavingThrowAbility = Helpers.Stats.Wisdom;
+            effect_description.HasSavingThrow = true;
+            effect_description.DurationType = RuleDefinitions.DurationType.Round;
+            effect_description.DurationParameter = 2;
+            effect_description.SetRangeType(RuleDefinitions.RangeType.Distance);
+            effect_description.SetRangeParameter(6);
+            effect_description.SetTargetType(RuleDefinitions.TargetType.Individuals);
+            effect_description.SetTargetSide(RuleDefinitions.Side.Enemy);
+            effect_description.SetEndOfEffect(RuleDefinitions.TurnOccurenceType.EndOfTurn);
+            effect_description.immuneCreatureFamilies = new List<string> {Helpers.Misc.createImmuneIfHasConditionFamily(immune_condition) };
+            
+
+            effect_description.EffectForms.Clear();
+            EffectForm effect_form = new EffectForm();
+            effect_form.FormType = EffectForm.EffectFormType.Condition;
+            effect_form.ConditionForm = new ConditionForm();
+            effect_form.ConditionForm.ConditionDefinition = DatabaseHelper.ConditionDefinitions.ConditionFrightened;
+            effect_form.hasSavingThrow = true;
+            effect_form.SavingThrowAffinity = RuleDefinitions.EffectSavingThrowType.Negates;
+            effect_form.conditionForm.operation = ConditionForm.ConditionOperation.Add;
+            effect_description.EffectForms.Add(effect_form);
+
+            intimidating_presence = Helpers.GenericPowerBuilder<FeatureDefinitionPower>
+                                                          .createPower("BarbarianSubclassBerserkerIntimidatingPresencePower",
+                                                             "",
+                                                             intimidating_presence_title_string,
+                                                             intimidating_presence_description_string,
+                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainOblivionMarkOfFate.GuiPresentation.SpriteReference,
+                                                             effect_description,
+                                                             RuleDefinitions.ActivationTime.Action,
+                                                             1,
+                                                             RuleDefinitions.UsesDetermination.Fixed,
+                                                             RuleDefinitions.RechargeRate.AtWill
+                                                             );
+            var immune_application = Helpers.FeatureBuilder<NewFeatureDefinitions.ApplyConditionOnPowerUseToTarget>.createFeature("BarbarianSubclassBerserkerIntimidatingPresenceApplyImmuneFeature",
+                                                                                                                                  "",
+                                                                                                                                  Common.common_no_title,
+                                                                                                                                  Common.common_no_title,
+                                                                                                                                  Common.common_no_icon,
+                                                                                                                                  a =>
+                                                                                                                                  {
+                                                                                                                                      a.condition = immune_condition;
+                                                                                                                                      a.durationType = RuleDefinitions.DurationType.Day;
+                                                                                                                                      a.durationValue = 1;
+                                                                                                                                      a.turnOccurence = RuleDefinitions.TurnOccurenceType.EndOfTurn;
+                                                                                                                                      a.power = intimidating_presence;
+                                                                                                                                      a.onlyOnSucessfulSave = true;
+                                                                                                                                  }
+                                                                                                                                  );
+            intimidating_presence_feature = Helpers.FeatureSetBuilder.createFeatureSet("BarbarianSubclassBerserkerIntimidatingPresenceFeatureSet",
+                                                                                       "",
+                                                                                       intimidating_presence_title_string,
+                                                                                       intimidating_presence_description_string,
+                                                                                       false,
+                                                                                       FeatureDefinitionFeatureSet.FeatureSetMode.Union,
+                                                                                       false,
+                                                                                       immune_application,
+                                                                                       intimidating_presence
+                                                                                       );
+        }
+
+
 
         static CharacterSubclassDefinition createPathOfBerserker()
         {
             createFrenzy();
+            createMindlessRage();
+            createIntimidatingPresence();
+
 
             var gui_presentation = new GuiPresentationBuilder(
                     "Subclass/&BarbarianSubclassPrimalPathOfBerserkerDescription",
@@ -1068,6 +1213,8 @@ namespace SolastaBarbarianClass
             CharacterSubclassDefinition definition = new CharacterSubclassDefinitionBuilder("BarbarianSubclassPrimalPathOfBersrker", "3356b777-cf53-469c-93f4-766c52664016")
                     .SetGuiPresentation(gui_presentation)
                     .AddFeatureAtLevel(frenzy, 3)
+                    .AddFeatureAtLevel(mindless_rage, 6)
+                    .AddFeatureAtLevel(intimidating_presence_feature, 10)
                     .AddToDB();
 
             return definition;
