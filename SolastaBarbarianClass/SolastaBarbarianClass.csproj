@@ -458,4 +458,8 @@
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
 	  <Exec Command="echo namespace ProjectPath { static public class ProjectPath { public static readonly string Path = @&quot;$(ProjectDir)&quot;;} } &gt; $(ProjectDir)path.cs" />
 	</Target>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy &quot;$(ProjectDir)/Sprites&quot; &quot;$(TargetDir)/Sprites&quot; /e /y /i /r" />
+	</Target>
 </Project>

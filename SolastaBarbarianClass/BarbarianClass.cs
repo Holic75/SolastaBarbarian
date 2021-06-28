@@ -56,11 +56,15 @@ namespace SolastaBarbarianClass
 
         protected BarbarianClassBuilder(string name, string guid) : base(name, guid)
         {
+            var barbarian_class_pictogram = SolastaModHelpers.CustomIcons.Tools.storeCustomIcon("BarbarianClassPictogram",
+                                                                                                $@"{UnityModManagerNet.UnityModManager.modsPath}/SolastaBarbarianClass/Sprites/BarbarianClass.png",
+                                                                                                1024, 576);
+
             var fighter = DatabaseHelper.CharacterClassDefinitions.Fighter;
             barbarian_class = Definition;
             Definition.GuiPresentation.Title = "Class/&BarbarianClassTitle";
             Definition.GuiPresentation.Description = "Class/&BarbarianClassDescription";
-            Definition.GuiPresentation.SetSpriteReference(fighter.GuiPresentation.SpriteReference);
+            Definition.GuiPresentation.SetSpriteReference(barbarian_class_pictogram);
 
             Definition.SetClassAnimationId(AnimationDefinitions.ClassAnimationId.Fighter);
             Definition.SetClassPictogramReference(fighter.ClassPictogramReference);
@@ -341,7 +345,7 @@ namespace SolastaBarbarianClass
             // condition.SetDurationParameterDie(RuleDefinitions.DieType.D1);
             //  condition.SetDurationType(RuleDefinitions.DurationType.Round);
 
-            var reckless_attack_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.ApplyConditionOnAttackToAttackerUnitUntilTurnStart>.createFeature("BarbarianClassAttackedMark",
+            var reckless_attack_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.InitiatorApplyConditionOnAttackToAttackerUntilTurnStart>.createFeature("BarbarianClassAttackedMark",
                                                                                                        "",
                                                                                                        Common.common_no_title,
                                                                                                        Common.common_no_title,
@@ -497,7 +501,8 @@ namespace SolastaBarbarianClass
                                                                                                              rage_title_string + kv.Value.ToString(),
                                                                                                              $" (+{kv.Key})"),
                                                              rage_description_string,
-                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDivineWrath.GuiPresentation.SpriteReference,
+                                                             //DatabaseHelper.FeatureDefinitionPowers.PowerDomainBattleDivineWrath.GuiPresentation.SpriteReference,
+                                                             DatabaseHelper.SpellDefinitions.Heroism.GuiPresentation.SpriteReference,
                                                              effect,
                                                              RuleDefinitions.ActivationTime.BonusAction,
                                                              2 + rage_uses_increase_levels.Count(l => l < kv.Value),
@@ -507,7 +512,8 @@ namespace SolastaBarbarianClass
                 rage_power.restrictions = new List<NewFeatureDefinitions.IRestriction>()
                 {
                     new NewFeatureDefinitions.InBattleRestriction(),
-                    new NewFeatureDefinitions.NoConditionRestriction(condition_can_continue_rage)
+                    new NewFeatureDefinitions.NoConditionRestriction(condition_can_continue_rage),
+                    new NewFeatureDefinitions.ArmorTypeRestriction(DatabaseHelper.ArmorCategoryDefinitions.HeavyArmorCategory, inverted: true)
                 };
 
                 rage_power.SetShortTitleOverride(rage_title_string);
@@ -1017,7 +1023,7 @@ namespace SolastaBarbarianClass
             condition.Features.Add(frenzy_watcher);
 
             var effect = new EffectDescription();
-            effect.Copy(DatabaseHelper.SpellDefinitions.Heroism.EffectDescription);
+            effect.Copy(DatabaseHelper.SpellDefinitions.Haste.EffectDescription);
             effect.SetRangeType(RuleDefinitions.RangeType.Self);
             effect.SetRangeParameter(1);
             effect.DurationParameter = 1;
@@ -1161,7 +1167,8 @@ namespace SolastaBarbarianClass
                                                              "",
                                                              intimidating_presence_title_string,
                                                              intimidating_presence_description_string,
-                                                             DatabaseHelper.FeatureDefinitionPowers.PowerDomainOblivionMarkOfFate.GuiPresentation.SpriteReference,
+                                                             //DatabaseHelper.FeatureDefinitionPowers.PowerDomainOblivionMarkOfFate.GuiPresentation.SpriteReference,
+                                                             DatabaseHelper.SpellDefinitions.Fear.GuiPresentation.SpriteReference,
                                                              effect_description,
                                                              RuleDefinitions.ActivationTime.Action,
                                                              1,
