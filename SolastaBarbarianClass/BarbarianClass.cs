@@ -152,7 +152,7 @@ namespace SolastaBarbarianClass
                                                                     "",
                                                                     "Feature/&BarbarianClassSkillPointPoolTitle",
                                                                     "Feature/&SkillGainChoicesPluralDescription",
-                                                                    3,
+                                                                    2,
                                                                     Helpers.Skills.AnimalHandling, Helpers.Skills.Athletics, Helpers.Skills.Intimidation, 
                                                                     Helpers.Skills.Nature, Helpers.Skills.Perception, Helpers.Skills.Survival
                                                                     );
@@ -784,7 +784,7 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.Darkvision,
                                                                                     DatabaseHelper.SpellDefinitions.EnhanceAbility,
                                                                                     DatabaseHelper.SpellDefinitions.FindTraps,
-                                                                                    DatabaseHelper.SpellDefinitions.FlameBlade,
+                                                                                    //DatabaseHelper.SpellDefinitions.FlameBlade,
                                                                                     DatabaseHelper.SpellDefinitions.FlamingSphere,
                                                                                     DatabaseHelper.SpellDefinitions.GustOfWind,
                                                                                     DatabaseHelper.SpellDefinitions.HoldPerson,
