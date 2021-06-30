@@ -56,7 +56,7 @@ namespace SolastaBarbarianClass
 
         protected BarbarianClassBuilder(string name, string guid) : base(name, guid)
         {
-            var barbarian_class_pictogram = SolastaModHelpers.CustomIcons.Tools.storeCustomIcon("BarbarianClassPictogram",
+            var barbarian_class_image = SolastaModHelpers.CustomIcons.Tools.storeCustomIcon("BarbarianClassImage",
                                                                                                 $@"{UnityModManagerNet.UnityModManager.modsPath}/SolastaBarbarianClass/Sprites/BarbarianClass.png",
                                                                                                 1024, 576);
 
@@ -64,7 +64,7 @@ namespace SolastaBarbarianClass
             barbarian_class = Definition;
             Definition.GuiPresentation.Title = "Class/&BarbarianClassTitle";
             Definition.GuiPresentation.Description = "Class/&BarbarianClassDescription";
-            Definition.GuiPresentation.SetSpriteReference(barbarian_class_pictogram);
+            Definition.GuiPresentation.SetSpriteReference(barbarian_class_image);
 
             Definition.SetClassAnimationId(AnimationDefinitions.ClassAnimationId.Fighter);
             Definition.SetClassPictogramReference(fighter.ClassPictogramReference);
