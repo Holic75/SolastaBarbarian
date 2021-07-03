@@ -9,7 +9,7 @@ It requires SolastaModApi and SolastaModHelpers (https://github.com/Holic75/Sola
 2. Execute UMM, Select Solasta, and Install
 3. Download and install [SolastaModApi](https://www.nexusmods.com/solastacrownofthemagister/mods/48) using UMM
 4. Download and install [SolastaModHelpers] using UMM
-5. Download and install the mod (.zip file) via UMM 
+5. Download and install the mod (.zip file from Releases page) via UMM 
 
 # How to Compile
 

@@ -559,6 +559,7 @@ namespace SolastaBarbarianClass
                                                                                                                     a.armorAllowed = false;
                                                                                                                     a.shieldAlowed = true;
                                                                                                                     a.stat = Helpers.Stats.Constitution;
+                                                                                                                    a.exclusive = true;
                                                                                                                     a.forbiddenConditions = new List<ConditionDefinition>
                                                                                                                     {
                                                                                                                         DatabaseHelper.ConditionDefinitions.ConditionBarkskin,
@@ -1143,7 +1144,7 @@ namespace SolastaBarbarianClass
             effect_description.SavingThrowAbility = Helpers.Stats.Wisdom;
             effect_description.HasSavingThrow = true;
             effect_description.DurationType = RuleDefinitions.DurationType.Round;
-            effect_description.DurationParameter = 2;
+            effect_description.DurationParameter = 1;
             effect_description.SetRangeType(RuleDefinitions.RangeType.Distance);
             effect_description.SetRangeParameter(6);
             effect_description.SetTargetType(RuleDefinitions.TargetType.Individuals);
