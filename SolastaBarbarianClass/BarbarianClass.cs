@@ -418,7 +418,9 @@ namespace SolastaBarbarianClass
                                                                                                                            Common.common_no_icon,
                                                                                                                            r =>
                                                                                                                            {
-                                                                                                                               r.exceptionFeatures = new List<FeatureDefinition>();
+                                                                                                                               r.spellcastingExceptionFeatures = new List<FeatureDefinition>();
+                                                                                                                               r.concentrationExceptionFeatures = new List<FeatureDefinition>();
+                                                                                                                               r.forbidConcentration = true;
                                                                                                                            }
                                                                                                                            );
 
@@ -850,6 +852,9 @@ namespace SolastaBarbarianClass
                                                                                               );
             war_shaman_spellcasting.SetSpellCastingLevel(-1);
             war_shaman_spellcasting.SetSpellCastingOrigin(FeatureDefinitionCastSpell.CastingOrigin.Subclass);
+            war_shaman_spellcasting.replacedSpells = new List<int> {0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+                                                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            rage_spellcasting_forbiden.concentrationExceptionFeatures.Add(war_shaman_spellcasting);
         }
 
 
@@ -863,7 +868,7 @@ namespace SolastaBarbarianClass
                                                                                             ragecaster_title_string,
                                                                                             ragecaster_description_string
                                                                                             );
-            rage_spellcasting_forbiden.exceptionFeatures.Add(ragecaster);
+            rage_spellcasting_forbiden.spellcastingExceptionFeatures.Add(ragecaster);
         }
 
 
