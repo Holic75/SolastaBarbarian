@@ -1,0 +1,56 @@
+Subclass/&BarbarianSubclassPrimalPathTitle	Urpfad
+Subclass/&BarbarianSubclassPrimalPathDescription	Wähle einen barbarischen Urpfad
+Class/&BarbarianClassTitle	Barbar
+Class/&BarbarianClassDescription	Bei manchen gibt es nur Wut. In der Art ihres Volkes, in der Wut ihrer Leidenschaft, im Kampfgeheul kennen alle diese brutalen Seelen Konflikte. Wilde, angeheuerte Muskeln, Meister bösartiger Kampftechniken, sie sind keine Soldaten oder Berufskrieger - sie sind die Besessenen, Schlachttiere und Kriegsgeister. Diese als Barbaren bekannten Kriegstreiber wissen wenig über Ausbildung, Vorbereitung oder die Regeln der Kriegsführung; für sie existiert nur der Moment, mit den Feinden, die vor ihnen stehen und dem Wissen, dass der nächste Moment ihren Tod bringen könnte. Sie besitzen einen sechsten Sinn in Bezug auf Gefahren und die Ausdauer, alles zu überstehen, was mit sich bringen könnte. Diese brutalen Krieger mögen aus allen Gesellschaftsschichten hervorgehen, sowohl zivilisiert als auch wild, obwohl ganze Gesellschaften mit solchen Philosophien durch die wilden Orte der Welt ziehen. In den Barbaren stürmt der ursprüngliche Kampfgeist, und wehe denen, die sich ihrer Wut stellen.
+Feature/&BarbarianWeaponProficiencyTitle	Barbaren-Waffen-Kenntnisse
+Feature/&BarbarianArmorProficiencyTitle	Fertigkeiten der Barbarenrüstung
+Feature/&BarbarianClassSkillPointPoolTitle	Barbarenfähigkeiten
+Feature/&BarbarianClassUnarmoredDefenseTitle	Ungepanzerte Verteidigung
+Feature/&BarbarianClassUnarmoredDefenseDescription	Solange du keine Rüstung trägst, beträgt deine Rüstungsklasse 10 + dein Geschicklichkeits-Modifikator + dein Konstitutions-Modifikator. Sie können einen Schild verwenden und trotzdem diesen Vorteil erhalten.
+Feature/&BarbarianClassRagePowerTitle	Wut
+Feature/&BarbarianClassRagePowerDescription	Im Kampf kämpfst du mit ursprünglicher Wildheit. Wenn du an der Reihe bist, kannst du als Bonusaktion eine Wut auslösen.\nWährend du wütest, erhältst du die folgenden Vorteile, wenn du keine schwere Rüstung trägst:\nDu hast Vorteile bei Stärkewürfen und Stärkerettungswürfen.\nWenn du einen Nahkampfangriff mit Stärke durchführst, erhältst du einen Bonus von +2 auf den Schadenswurf (+3 auf der 9. Stufe, +4 auf der 16. Stufe).\nDu bist resistent gegen Schlag-, Stich- und Hieb-Schaden.\nWenn du in der Lage bist, Zauber zu wirken, kannst du sie nicht wirken oder dich auf sie konzentrieren, während du wütest.\nDeine Wut hält 1 Minute an. Es endet vorzeitig, wenn du bewusstlos geschlagen wirst oder dein Zug endet und du seit deinem letzten Zug keine feindliche Kreatur angegriffen oder seitdem Schaden erlitten hast. Du kannst bis zu 2 Mal wüten und musst eine lange Pause einlegen, bevor du wieder wüten kannst.
+Rules/&BarbarianClassRageCondition	Wütend
+Rules/&BarbarianClassCanContinueRageCondition	Kann die Wut fortsetzen
+Feature/&BarbarianClassRageExtraUseTitle	Zusätzliche Wutnutzung
+Feature/&BarbarianClassRageExtraUseDescription	Sie können noch einmal toben, bevor Sie eine lange Pause einlegen.
+Feature/&BarbarianClassRecklessAttackPowerTitle	Rücksichtsloser Angriff
+Feature/&BarbarianClassRecklessAttackPowerDescription	Ab der 2. Stufe kannst du alle Sorgen um die Verteidigung beiseite legen und mit heftiger Verzweiflung angreifen. Wenn Sie Ihren ersten Angriff in Ihrem Zug ausführen, können Sie sich entscheiden, rücksichtslos anzugreifen. Dies gibt dir in diesem Zug einen Vorteil bei Nahkampfwaffenangriffswürfen mit Stärke, aber Angriffswürfe gegen dich haben bis zu deinem nächsten Zug einen Vorteil.
+Rules/&BarbarianClassRecklessCondition	Leichtsinnig
+Feature/&BarbarianClassDangerSenseTitle	Gefahrensinn
+Feature/&BarbarianClassDangerSenseDescription	Auf der 2. Stufe bekommen Sie ein unheimliches Gefühl dafür, wenn die Dinge in der Nähe nicht so sind, wie sie sein sollten, was Ihnen einen Vorteil verschafft, wenn Sie Gefahren ausweichen. Sie haben einen Vorteil bei Geschicklichkeitsrettungswürfen gegen Effekte, die Sie sehen können, wie zum Beispiel Fallen und Zaubersprüche. Um diesen Vorteil zu erhalten, dürfen Sie nicht geblendet, taub oder handlungsunfähig sein.
+Feature/&BarbarianClassFeralInstinctTitle	Wilder Instinkt
+Feature/&BarbarianClassFeralInstinctDescription	Ab der 7. Stufe sind Ihre Instinkte so geschärft, dass Sie bei Initiativewürfen im Vorteil sind. Außerdem kann man sich nicht mehr wundern.
+Feature/&BarbarianClassFastMovementTitle	Schnelle Bewegung
+Feature/&BarbarianClassFastMovementDescription	Ab Stufe 5 erhöht sich deine Geschwindigkeit um 3 m, wenn du keine schwere Rüstung trägst.
+Feature/&BarbarianClassBrutalCriticalTitle	Brutal kritisch
+Feature/&BarbarianClassBrutalCriticalDescription	Ab der 9. Stufe kannst du bei der Ermittlung des zusätzlichen Schadens für einen kritischen Treffer mit einem Nahkampfangriff einen zusätzlichen Waffenschadenswürfel würfeln.\nDies erhöht sich auf zwei zusätzliche Würfel auf der 13. Stufe und auf drei zusätzliche Würfel auf der 17. Stufe.
+Stage/&SubclassSelectionStagePrimalPathHeader	Barbarischer Urpfad
+Stage/&SubclassSelectionStagePrimalPathTitle	Barbarischer Urpfad
+Stage/&SubclassSelectionStagePrimalPathFeatures	Primal Path-Funktionen
+Subclass/&BarbarianSubclassPrimalPathOfFrozenFuryTitle	Pfad der gefrorenen Wut
+Subclass/&BarbarianSubclassPrimalPathOfFrozenFuryDescription	Barbaren, die durch den gefrorenen Norden wandern, sollen Eis in ihren Adern haben. Ihre Wut brennt nicht so sehr in ihnen, dass sie sie für jede Emotion außer Blutdurst blind macht – ihre einzige Sorge gilt der Gewalt. Sie schließen Schmerz, Angst und Winterkälte gleichermaßen aus, um einen Kampf zu beenden.
+Feature/&BarbarianSubclassFrozenFuryWintersFuryTitle	Winterzorn
+Feature/&BarbarianSubclassFrozenFuryWintersFuryDescription	Sobald Sie diesen Weg auf der 3. Ebene gewählt haben, gefriert die Luft um Sie herum, wenn Sie in Wut geraten. Alle Kreaturen in einem Umkreis von 1,5 m um dich erleiden am Ende deines Zuges 1W6 Punkte Kälteschaden. Dieser Schaden erhöht sich auf 1W10 auf der 6. Stufe, 2W6 auf der 10. Stufe und 2W10 auf der 14. Stufe. Sie sind gegen diesen Schaden immun.
+Feature/&BarbarianSubclassFrozenFuryFrigidBodyTitle	Kalter Körper
+Feature/&BarbarianSubclassFrozenFuryFrigidBodyDescription	Ab der 6. Stufe fegen eisige Winde den Raum um dich herum, wenn du in Wut gerätst, und stößt Raketen weg, die auf dich zielen. Deine Rüstungsklasse erhöht sich um 2 gegen Angriffe mit Fernkampfwaffen.
+Feature/&BarbarianSubclassFrozenFuryNumbTitle	Gefühllos
+Feature/&BarbarianSubclassFrozenFuryNumbDescription	Wenn Sie die 10. Stufe erreichen, schließt Ihr Geist alle Schmerzen und Ängste aus und erfüllt Sie mit einer kalten Entschlossenheit, weiterzukämpfen. Du kannst nicht erschreckt oder vergiftet werden, während du wütest. Wenn du Angst hast oder vergiftet bist, wenn du in deine Wut gerätst, werden alle derartigen Effekte entfernt.
+Subclass/&BarbarianSubclassPrimalPathOfWarShamanTitle	Kriegsschamane
+Subclass/&BarbarianSubclassPrimalPathOfWarShamanDescription	Der Pfad des Kriegsschamanen ist ein uralter, der angeblich zuerst von längst vergessenen Krieger-Druiden praktiziert wurde.\nBarbaren, die diesem Urpfad folgen, verfügen über die Fähigkeit, ihre Fähigkeiten im Kampf zu verbessern. Wie Druiden können Kriegsschamanen in manchen Gesellschaften oder von bestimmten Götteranbetern gemieden werden, die jede Titanenverehrung als ein Gräuel betrachten.
+Feature/&BarbarianSubclassWarShamanClassSpellcastingTitle	Zaubersprüche des Kriegsschamanen
+Feature/&BarbarianSubclassWarShamanClassSpellcastingDescription	Wenn du diesen Pfad auf der 3. Stufe wählst, erhältst du die Fähigkeit, eine begrenzte Auswahl an Druidenzaubern und Cantrips zu wirken. Während du während des Tobens keine Zauber wirken kannst, kannst du dich dabei auf Druidenzauber konzentrieren.\nWeisheit ist deine Zauberfähigkeit für deine Druidenzauber. Du verwendest Weisheit immer dann, wenn sich ein Zauber auf deine Zauberfähigkeit bezieht. Außerdem verwendest du deinen Weisheitsmodifikator, wenn du den Rettungswurf-SG für einen von dir gewirkten Druidenzauber festlegst oder wenn du einen Angriffswurf mit einem machst.
+Feature/&BarbarianSubclassWarShamanClassShareRageTitle	Wut teilen
+Feature/&BarbarianSubclassWarShamanClassShareRageDescription	Ab der 6. Stufe können Sie als Teil derselben Bonusaktion, die Sie verwenden, um in Wut zu verfallen, einen Zauberplatz der 1. Wenn Sie dies tun, wählen Sie eine willige Kreatur, die Sie innerhalb von 9 m von Ihnen sehen können. Vorausgesetzt, Ihr Ziel kann Sie sehen oder hören und es trägt keine schwere Rüstung, es wütet auch. Es erhält die Effekte der Wutfunktion, einschließlich Ihres Wutschadensbonus.
+Feature/&BarbarianSubclassWarShamanClassRagecasterTitle	Wutauslöser
+Feature/&BarbarianSubclassWarShamanClassRagecasterDescription	Ab der 10. Stufe kannst du Druidenzauber wirken, während du wütest. Die Reichweite Ihrer Share Rage-Funktion erhöht sich auf 60 Fuß.
+Subclass/&BarbarianSubclassPrimalPathOfBerserkerTitle	Berserker
+Subclass/&BarbarianSubclassPrimalPathOfBerserkerDescription	Für manche Barbaren ist Wut ein Mittel zum Zweck – dieser Zweck ist Gewalt. Der Pfad des Berserkers ist ein Pfad ungezügelter Wut, blutdurchtränkt. Wenn Sie in die Wut des Berserkers geraten, begeistern Sie sich im Chaos des Kampfes, ohne Rücksicht auf Ihre eigene Gesundheit oder Ihr Wohlbefinden.
+Feature/&BarbarianSubclassBerserkerFrenzyTitle	Raserei
+Feature/&BarbarianSubclassBerserkerFrenzyDescription	Wenn Sie diesen Weg auf der 3. Ebene wählen, können Sie in Raserei geraten, wenn Sie wüten. Wenn Sie dies tun, können Sie für die Dauer Ihrer Wut einen einzelnen Nahkampfwaffenangriff als Bonusaktion ausführen. Wenn Ihre Wut endet, werden Sie erschöpft, bis Sie eine kurze Pause einlegen.
+Rules/&BarbarianSubclassBerserkerFrenzyCondition	Rasant
+Feature/&BarbarianSubclassBerserkerFrenzyExhaustedTitle	Erschöpft
+Feature/&BarbarianSubclassBerserkerFrenzyExhaustedDescripton	Sie erhalten einen Nachteil bei allen Fähigkeitschecks.
+Feature/&BarbarianSubclassMindlessRageTitle	Gedankenlose Wut
+Feature/&BarbarianSubclassMindlessRageDescription	Ab der 6. Stufe kannst du beim Toben nicht verzaubert oder verängstigt werden. Wenn Sie verzaubert oder verängstigt sind, wenn Sie Ihre Wut betreten, wird der Effekt für die Dauer der Wut ausgesetzt.
+Feature/&BarbarianSubclassBerserkerIntimidatingPresenceTitle	Einschüchternde Präsenz
+Feature/&BarbarianSubclassBerserkerIntimidatingPresenceDescription	Ab Stufe 10 kannst du deine Aktion nutzen, um jemanden mit deiner bedrohlichen Präsenz zu erschrecken. Wenn Sie dies tun, wählen Sie eine Kreatur aus, die Sie innerhalb von 9 m von Ihnen sehen können. Wenn die Kreatur dich sehen oder hören kann, muss ihr ein Weisheitswurf gelingen (SG gleich 8 + dein Fähigkeitsbonus + dein Charisma-Modifikator) oder bis zum Ende deines nächsten Zuges Angst vor dir haben.\nWenn der Rettungswurf der Kreatur gelingt, kannst du diese Funktion 24 Stunden lang nicht mehr auf diese Kreatur anwenden.
