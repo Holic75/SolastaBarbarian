@@ -457,7 +457,7 @@ namespace SolastaBarbarianClass
                                                                                           rage_description_string,
                                                                                           null,
                                                                                           DatabaseHelper.ConditionDefinitions.ConditionHeroism,
-                                                                                          new RuleDefinitions.ConditionInterruption[] { },
+                                                                                          new RuleDefinitions.ConditionInterruption[] {},
                                                                                           DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance,
                                                                                           DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityPiercingResistance,
                                                                                           DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinitySlashingResistance,
@@ -465,6 +465,8 @@ namespace SolastaBarbarianClass
                                                                                           damage_bonus,
                                                                                           rage_spellcasting_forbiden
                                                                                           );
+                rage_condition.SetPossessive(false);
+                
 
                 var rage_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.RageWatcher>.createFeature("BarbarianClassRageAttackWatcher" + kv.Value.ToString(),
                                                                                                "",
@@ -488,6 +490,7 @@ namespace SolastaBarbarianClass
                 effect.DurationType = RuleDefinitions.DurationType.Minute;
                 effect.EffectForms.Clear();
                 effect.SetTargetType(RuleDefinitions.TargetType.Self);
+                effect.SetRecurrentEffect(RuleDefinitions.RecurrentEffect.No);
 
                 var effect_form = new EffectForm();
                 effect_form.ConditionForm = new ConditionForm();
@@ -902,6 +905,7 @@ namespace SolastaBarbarianClass
                 effect.SetTargetType(RuleDefinitions.TargetType.Individuals);
                 effect.SetTargetSide(RuleDefinitions.Side.Ally);
                 effect.SetTargetFilteringTag((RuleDefinitions.TargetFilteringTag)(ExtendedEnums.ExtraTargetFilteringTag.NonCaster | ExtendedEnums.ExtraTargetFilteringTag.NoHeavyArmor));
+                effect.SetRecurrentEffect(RuleDefinitions.RecurrentEffect.No);
 
                 effect.EffectForms.Add(rage_powers[kv.Value].EffectDescription.EffectForms[0]);
                 var effect_form = new EffectForm();
@@ -968,7 +972,7 @@ namespace SolastaBarbarianClass
                                                                                       frenzy_exhausted_description_string,
                                                                                       null,
                                                                                       DatabaseHelper.ConditionDefinitions.ConditionExhausted,
-                                                                                      new RuleDefinitions.ConditionInterruption[] { RuleDefinitions.ConditionInterruption.AnyBattleTurnEnd },
+                                                                                      new RuleDefinitions.ConditionInterruption[] { },
                                                                                       DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseStrength,
                                                                                       DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseDexterity,
                                                                                       DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseConstitution,
@@ -977,30 +981,24 @@ namespace SolastaBarbarianClass
                                                                                       DatabaseHelper.FeatureDefinitionAbilityCheckAffinitys.AbilityCheckAffinityBestowCurseCharisma
                                                                                       );
             exhausted_after_frenzy_condition.SetConditionType(RuleDefinitions.ConditionType.Detrimental);
+            exhausted_after_frenzy_condition.SetPossessive(false);
 
             string frenzy_title_string = "Feature/&BarbarianSubclassBerserkerFrenzyTitle";
             string frenzy_description_string = "Feature/&BarbarianSubclassBerserkerFrenzyDescription";
-            var feature_attack = Helpers.CopyFeatureBuilder<FeatureDefinitionAttributeModifier>.createFeatureCopy("BarbarianSubclassBerserkerFrenzyExtraAttack",
+            var feature_attack = Helpers.FeatureBuilder<NewFeatureDefinitions.ExtraMainWeaponAttack>.createFeature("BarbarianSubclassBerserkerFrenzyExtraAttack",
                                                                                                            "",
                                                                                                            "",
                                                                                                            "",
                                                                                                            null,
-                                                                                                           DatabaseHelper.FeatureDefinitionAttributeModifiers.AttributeModifierFighterExtraAttack
+                                                                                                           a =>
+                                                                                                           {
+                                                                                                               a.actionType = ActionDefinitions.ActionType.Bonus;
+                                                                                                               a.restrictions = new List<NewFeatureDefinitions.IRestriction>
+                                                                                                               {
+                                                                                                                   new NewFeatureDefinitions.NoRangedWeaponRestriction()
+                                                                                                               };
+                                                                                                           }
                                                                                                            );
-            var feature_no_bonus_attack = Helpers.CopyFeatureBuilder<FeatureDefinitionActionAffinity>.createFeatureCopy("BarbarianSubclassBerserkerNoBonusAction",
-                                                                                                                           "",
-                                                                                                                           "",
-                                                                                                                           "",
-                                                                                                                           null,
-                                                                                                                           DatabaseHelper.FeatureDefinitionActionAffinitys.ActionAffinityConditionRestrained,
-                                                                                                                           a =>
-                                                                                                                           {
-                                                                                                                               a.allowedActionTypes = new bool[]
-                                                                                                                               {
-                                                                                                                                   true, false, true, true, true, true
-                                                                                                                               };
-                                                                                                                           }
-                                                                                                                           );
 
             var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianSubclassBerserkerFrenzyCondition",
                                                                           "",
@@ -1009,8 +1007,7 @@ namespace SolastaBarbarianClass
                                                                           null,
                                                                           DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
                                                                           new RuleDefinitions.ConditionInterruption[] {},
-                                                                          feature_attack,
-                                                                          feature_no_bonus_attack
+                                                                          feature_attack
                                                                           );
 
             var frenzy_watcher = Helpers.FeatureBuilder<NewFeatureDefinitions.FrenzyWatcher>.createFeature("BarbarianSubclassBerserkerFrenzyWatcher",
@@ -1027,6 +1024,7 @@ namespace SolastaBarbarianClass
                                                                                );
 
             condition.Features.Add(frenzy_watcher);
+            condition.SetPossessive(false);
 
             var effect = new EffectDescription();
             effect.Copy(DatabaseHelper.SpellDefinitions.Haste.EffectDescription);
@@ -1051,10 +1049,10 @@ namespace SolastaBarbarianClass
                                                          frenzy_description_string,
                                                          DatabaseHelper.FeatureDefinitionPowers.PowerOathOfTirmarSmiteTheHidden.GuiPresentation.SpriteReference,
                                                          effect,
-                                                         RuleDefinitions.ActivationTime.BonusAction,
+                                                         RuleDefinitions.ActivationTime.NoCost,
                                                          1,
                                                          RuleDefinitions.UsesDetermination.Fixed,
-                                                         RuleDefinitions.RechargeRate.LongRest
+                                                         RuleDefinitions.RechargeRate.ShortRest
                                                          );
             frenzy.restrictions = new List<NewFeatureDefinitions.IRestriction>()
             {

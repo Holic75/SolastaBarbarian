@@ -46,7 +46,7 @@ Feature/&BarbarianSubclassWarShamanClassRagecasterDescription At 10th level, you
 Subclass/&BarbarianSubclassPrimalPathOfBerserkerTitle Berserker
 Subclass/&BarbarianSubclassPrimalPathOfBerserkerDescription For some barbarians, rage is a means to an end - that end being violence. The Path of the Berserker is a path of untrammeled fury, slick with blood. As you enter the berserker's rage, you thrill in the chaos of battle, heedless of your own health or well-being.
 Feature/&BarbarianSubclassBerserkerFrenzyTitle Frenzy
-Feature/&BarbarianSubclassBerserkerFrenzyDescription Starting when you choose this path at 3rd level, you can go into a frenzy as a bonus action when you are enraged. If you do so, for the duration of your rage you can make an extra single weapon attack as a bonus action, but you can no longer use bonus actions. When your rage ends, you become exhausted until you take a long rest.
+Feature/&BarbarianSubclassBerserkerFrenzyDescription Starting when you choose this path at 3rd level, you can go into a frenzy when you rage. If you do so, for the duration of your rage you can make a single melee weapon attack weapon attack as a bonus action. When your rage ends, you become exhausted until you take a short rest.
 Rules/&BarbarianSubclassBerserkerFrenzyCondition Frenzied
 Feature/&BarbarianSubclassBerserkerFrenzyExhaustedTitle Exhausted
 Feature/&BarbarianSubclassBerserkerFrenzyExhaustedDescripton You receive a disvantage on all ability checks.
