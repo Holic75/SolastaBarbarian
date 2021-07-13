@@ -28,7 +28,7 @@ namespace SolastaBarbarianClass
         static public NewFeatureDefinitions.SavingthrowAffinityUnderRestriction danger_sense;
         static public Dictionary<int, NewFeatureDefinitions.IncreaseNumberOfPowerUses> rage_power_extra_use = new Dictionary<int, NewFeatureDefinitions.IncreaseNumberOfPowerUses>();
         static public FeatureDefinitionAttributeModifier extra_attack;
-        static public FeatureDefinitionMovementAffinity fast_movement;
+        static public NewFeatureDefinitions.MovementBonusWithRestrictions fast_movement;
         static public FeatureDefinitionFeatureSet feral_instinct;
         static public NewFeatureDefinitions.WeaponDamageDiceIncreaseOnCriticalHit brutal_critical;
         //Frozen Fury
@@ -260,13 +260,20 @@ namespace SolastaBarbarianClass
             string fast_movement_title_string = "Feature/&BarbarianClassFastMovementTitle";
             string fast_movement_description_string = "Feature/&BarbarianClassFastMovementDescription";
 
-            fast_movement = Helpers.CopyFeatureBuilder<FeatureDefinitionMovementAffinity>.createFeatureCopy("BarbarianClassFastMovement",
-                                                                                                            "",
-                                                                                                            fast_movement_title_string,
-                                                                                                            fast_movement_description_string,
-                                                                                                            null,
-                                                                                                            DatabaseHelper.FeatureDefinitionMovementAffinitys.MovementAffinityLongstrider
-                                                                                                            );
+            fast_movement = Helpers.FeatureBuilder<NewFeatureDefinitions.MovementBonusWithRestrictions>.createFeature("BarbarianClassFastMovement",
+                                                                                                                      "",
+                                                                                                                      fast_movement_title_string,
+                                                                                                                      fast_movement_description_string,
+                                                                                                                      null,
+                                                                                                                      a =>
+                                                                                                                      {
+                                                                                                                          a.restrictions = new List<NewFeatureDefinitions.IRestriction>()
+                                                                                                                          {
+                                                                                                                              new NewFeatureDefinitions.ArmorTypeRestriction(DatabaseHelper.ArmorCategoryDefinitions.HeavyArmorCategory, inverted: true)
+                                                                                                                          };
+                                                                                                                          a.modifiers = new List<FeatureDefinition> { DatabaseHelper.FeatureDefinitionMovementAffinitys.MovementAffinityLongstrider };
+                                                                                                                      }
+                                                                                                                      );
         }
 
         static void createDangerSense()
