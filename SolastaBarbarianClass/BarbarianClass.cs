@@ -811,6 +811,7 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.Daylight,
                                                                                     DatabaseHelper.SpellDefinitions.DispelMagic,
                                                                                     DatabaseHelper.SpellDefinitions.ProtectionFromEnergy,
+                                                                                    DatabaseHelper.SpellDefinitions.Revivify,
                                                                                     DatabaseHelper.SpellDefinitions.SleetStorm,
                                                                                     DatabaseHelper.SpellDefinitions.WindWall
                                                                     },
@@ -818,6 +819,9 @@ namespace SolastaBarbarianClass
                                                                     {
                                                                                     DatabaseHelper.SpellDefinitions.Blight,
                                                                                     DatabaseHelper.SpellDefinitions.Confusion,
+                                                                                    DatabaseHelper.SpellDefinitions.ConjureMinorElementals,
+                                                                                    DatabaseHelper.SpellDefinitions.DominateBeast,
+                                                                                    DatabaseHelper.SpellDefinitions.FireShield,
                                                                                     DatabaseHelper.SpellDefinitions.FreedomOfMovement,
                                                                                     DatabaseHelper.SpellDefinitions.GiantInsect,
                                                                                     DatabaseHelper.SpellDefinitions.IceStorm,
