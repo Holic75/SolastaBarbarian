@@ -829,6 +829,11 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.WallOfFire
                                                                     }
                                                                     );
+            var shillelagh = NewFeatureDefinitions.SpellData.getSpell("ShillelaghSpell");
+            if (shillelagh != null)
+            {
+                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, shillelagh);
+            }
             war_shaman_spelllist.SetMaxSpellLevel(4);
             war_shaman_spelllist.SetHasCantrips(true);
 
