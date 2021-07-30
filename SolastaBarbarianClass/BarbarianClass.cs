@@ -834,6 +834,19 @@ namespace SolastaBarbarianClass
             {
                 Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, shillelagh);
             }
+
+            var heat_metal = NewFeatureDefinitions.SpellData.getSpell("HeatMetalSpell");
+            if (heat_metal != null)
+            {
+                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, heat_metal);
+            }
+
+            var call_lightning = NewFeatureDefinitions.SpellData.getSpell("CallLightningSpell");
+            if (call_lightning != null)
+            {
+                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, call_lightning);
+            }
+
             war_shaman_spelllist.SetMaxSpellLevel(4);
             war_shaman_spelllist.SetHasCantrips(true);
 
