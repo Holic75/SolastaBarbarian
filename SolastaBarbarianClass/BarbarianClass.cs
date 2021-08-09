@@ -776,6 +776,8 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.Guidance,
                                                                                     DatabaseHelper.SpellDefinitions.PoisonSpray,
                                                                                     DatabaseHelper.SpellDefinitions.Resistance,
+                                                                                    DatabaseHelper.SpellDefinitions.Shine,
+                                                                                    DatabaseHelper.SpellDefinitions.Sparkle
                                                                     },
                                                                     new List<SpellDefinition>
                                                                     {
@@ -783,12 +785,14 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.CharmPerson,
                                                                                     DatabaseHelper.SpellDefinitions.CureWounds,
                                                                                     DatabaseHelper.SpellDefinitions.DetectMagic,
+                                                                                    DatabaseHelper.SpellDefinitions.Entangle,
                                                                                     DatabaseHelper.SpellDefinitions.FaerieFire,
                                                                                     DatabaseHelper.SpellDefinitions.FogCloud,
                                                                                     DatabaseHelper.SpellDefinitions.Goodberry,
                                                                                     DatabaseHelper.SpellDefinitions.HealingWord,
                                                                                     DatabaseHelper.SpellDefinitions.Jump,
                                                                                     DatabaseHelper.SpellDefinitions.Longstrider,
+                                                                                    DatabaseHelper.SpellDefinitions.ProtectionFromEvilGood,
                                                                                     DatabaseHelper.SpellDefinitions.Thunderwave
                                                                     },
                                                                     new List<SpellDefinition>
@@ -829,22 +833,20 @@ namespace SolastaBarbarianClass
                                                                                     DatabaseHelper.SpellDefinitions.WallOfFire
                                                                     }
                                                                     );
-            var shillelagh = NewFeatureDefinitions.SpellData.getSpell("ShillelaghSpell");
-            if (shillelagh != null)
-            {
-                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, shillelagh);
-            }
 
-            var heat_metal = NewFeatureDefinitions.SpellData.getSpell("HeatMetalSpell");
-            if (heat_metal != null)
+            var new_spells = new SpellDefinition[]{ NewFeatureDefinitions.SpellData.getSpell("ShillelaghSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("AirBlastSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("ThunderStrikeSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("IceStrikeSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("HeatMetalSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("CallLightningSpell")
+                                                  };
+            foreach (var s in new_spells)
             {
-                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, heat_metal);
-            }
-
-            var call_lightning = NewFeatureDefinitions.SpellData.getSpell("CallLightningSpell");
-            if (call_lightning != null)
-            {
-                Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, call_lightning);
+                if (s != null)
+                {
+                    Helpers.Misc.addSpellToSpelllist(war_shaman_spelllist, s);
+                }
             }
 
             war_shaman_spelllist.SetMaxSpellLevel(4);
