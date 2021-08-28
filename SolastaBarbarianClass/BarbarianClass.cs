@@ -836,6 +836,7 @@ namespace SolastaBarbarianClass
 
             var new_spells = new SpellDefinition[]{ NewFeatureDefinitions.SpellData.getSpell("ShillelaghSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("AirBlastSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("AcidClawsSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("ThunderStrikeSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("IceStrikeSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("ConjureSpiritAnimalSpell"),
