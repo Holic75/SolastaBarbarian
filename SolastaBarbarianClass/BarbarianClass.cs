@@ -838,6 +838,7 @@ namespace SolastaBarbarianClass
                                                     NewFeatureDefinitions.SpellData.getSpell("AirBlastSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("ThunderStrikeSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("IceStrikeSpell"),
+                                                    NewFeatureDefinitions.SpellData.getSpell("ConjureSpiritAnimalSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("FlameBladeSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("HeatMetalSpell"),
                                                     NewFeatureDefinitions.SpellData.getSpell("CallLightningSpell")
