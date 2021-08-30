@@ -339,7 +339,7 @@ namespace SolastaBarbarianClass
             var condition = Helpers.ConditionBuilder.createConditionWithInterruptions("BarbarianClassRecklessAttackCondition",
                                                                                       "",
                                                                                       reckless_condition_string,
-                                                                                      reckless_attack_description_string,
+                                                                                      "Feature/&ConditionBarbarianClassRecklessAttackPowerDescription",
                                                                                       null,
                                                                                       DatabaseHelper.ConditionDefinitions.ConditionHeraldOfBattle,
                                                                                       new RuleDefinitions.ConditionInterruption[] { },
