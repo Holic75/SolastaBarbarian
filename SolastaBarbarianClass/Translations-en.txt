@@ -20,7 +20,7 @@ Rules/&BarbarianClassRecklessCondition	Reckless
 Feature/&BarbarianClassDangerSenseTitle	Danger Sense
 Feature/&BarbarianClassDangerSenseDescription	You gain an uncanny sense of when things nearby aren't as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can't be blinded, deafened, or incapacitated.
 Feature/&BarbarianClassFeralInstinctTitle	Feral Instinct
-Feature/&BarbarianClassFeralInstinctDescriptionYour instincts are so honed that you have advantage on initiative rolls. Additionally, you can no longer be surprised.
+Feature/&BarbarianClassFeralInstinctDescription	Your instincts are so honed that you have advantage on initiative rolls. Additionally, you can no longer be surprised.
 Feature/&BarbarianClassFastMovementTitle	Fast Movement
 Feature/&BarbarianClassFastMovementDescription	Your speed increases by 10 feet while you aren't wearing heavy armor.
 Feature/&BarbarianClassBrutalCriticalTitle	Brutal Critical
