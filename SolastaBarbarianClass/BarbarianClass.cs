@@ -611,7 +611,7 @@ namespace SolastaBarbarianClass
             string numb_title_string = "Feature/&BarbarianSubclassFrozenFuryNumbTitle";
             string numb_description_string = "Feature/&BarbarianSubclassFrozenFuryNumbDescription";
 
-            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionPoisoned, DatabaseHelper.ConditionDefinitions.ConditionFrightened };
+            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionPoisoned, DatabaseHelper.ConditionDefinitions.ConditionFrightened, DatabaseHelper.ConditionDefinitions.ConditionFrightenedFear };
             var numb_immunity = Helpers.FeatureBuilder<NewFeatureDefinitions.ImmunityToCondtionIfHasSpecificConditions>.createFeature("BarbarianSubclassFrozenFuryNumbImmunity",
                                                                                                                           "",
                                                                                                                           numb_title_string,
@@ -1107,7 +1107,7 @@ namespace SolastaBarbarianClass
             string mindless_rage_title_string = "Feature/&BarbarianSubclassMindlessRageTitle";
             string mindless_rage_description_string = "Feature/&BarbarianSubclassMindlessRageDescription";
 
-            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionCharmed, DatabaseHelper.ConditionDefinitions.ConditionFrightened };
+            var conditons = new List<ConditionDefinition> { DatabaseHelper.ConditionDefinitions.ConditionCharmed, DatabaseHelper.ConditionDefinitions.ConditionFrightened, DatabaseHelper.ConditionDefinitions.ConditionFrightenedFear };
             var immunity = Helpers.FeatureBuilder<NewFeatureDefinitions.ImmunityToCondtionIfHasSpecificConditions>.createFeature("BarbarianSubclassBerserkerMindlessRageImmunity",
                                                                                                                                     "",
                                                                                                                                     mindless_rage_title_string,
